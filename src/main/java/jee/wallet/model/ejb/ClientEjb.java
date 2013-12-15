@@ -6,6 +6,6 @@ import javax.ejb.LocalBean;
 @Stateless
 @RemoteBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ClientEjb extends AbstractEjb
+public class ClientEjb extends AbstractEjb<Client>
 {
 }
