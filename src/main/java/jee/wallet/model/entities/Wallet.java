@@ -1,92 +1,68 @@
 package jee.wallet.model.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
-import java.lang.Override;
-import javax.persistence.OneToOne;
-import jee.wallet.model.entities.User;
-import jee.wallet.model.entities.StockOption;
-import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class Wallet implements Serializable
-{
+public class Wallet implements Serializable {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id = null;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
+    @OneToOne
+    private User user;
+    @OneToMany
+    private List<WalletHistory> history = new ArrayList<WalletHistory>();
 
-   @OneToOne
-   private User user;
+    public Long getId() {
+        return this.id;
+    }
 
-   @OneToMany
-   private List<StockOption> stockOptions = new ArrayList<StockOption>();
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public User getUser() {
+        return this.user;
+    }
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((Wallet) that).id);
-      }
-      return super.equals(that);
-   }
+    public List<WalletHistory> getHistory() {
+        return history;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    public void setHistory(List<WalletHistory> history) {
+        this.history = history;
+    }
 
-   public User getUser()
-   {
-      return this.user;
-   }
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((Wallet) that).id);
+        }
+        return super.equals(that);
+    }
 
-   public void setUser(final User user)
-   {
-      this.user = user;
-   }
-
-   public List<StockOption> getStockOptions()
-   {
-      return this.stockOptions;
-   }
-
-   public void setStockOptions(final List<StockOption> stockOptions)
-   {
-      this.stockOptions = stockOptions;
-   }
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
 }

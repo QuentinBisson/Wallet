@@ -1,16 +1,15 @@
 package jee.wallet.model.ejb;
 
-import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
+
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public abstract class AbstractEjb<E> implements EjbInterface {
-	
-	@PersistenceContext
-	protected EntityManager em;
-	
-	public void findById(long id) {
-		return em.find(E.getClass(), id);
-	}
-	
+public abstract class AbstractEjb<E> implements EjbInterface<E> {
+
+    @PersistenceContext
+    protected EntityManager em;
+
 }

@@ -1,10 +1,9 @@
 .idea/
 out/
-nbprojects/
 build.xml
 manifest.mf
 *.iml
-/Wallet/nbproject/private/
-/Wallet/build/
-/Wallet/dist/
+*/build/
+*/nbprojects/
+*/dist/
 .forge_settings

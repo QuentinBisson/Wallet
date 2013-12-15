@@ -1,18 +1,17 @@
-package fr.univ_rouen.bd.model.validation;
+package jee.wallet.model.validation;
 
 /**
- *
  * @author bissoqu1
  */
 public class MIMETypeValidator extends AbstractValidator<String> {
-    
+
     private String mimeType;
-    
-    public MIMETypeValidator(String fieldName,String mimeType) {
+
+    public MIMETypeValidator(String fieldName, String mimeType) {
         super(fieldName);
         this.mimeType = mimeType;
     }
-    
+
     @Override
     protected boolean validate(String e) {
         boolean result = mimeType.equals(e);

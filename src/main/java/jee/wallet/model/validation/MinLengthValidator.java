@@ -1,7 +1,6 @@
-package fr.univ_rouen.bd.model.validation;
+package jee.wallet.model.validation;
 
 /**
- *
  * @author bissoqu1
  */
 public class MinLengthValidator extends AbstractValidator<String> {

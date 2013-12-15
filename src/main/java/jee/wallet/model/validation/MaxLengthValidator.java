@@ -1,9 +1,6 @@
-package fr.univ_rouen.bd.model.validation;
-
-import org.apache.commons.lang.StringUtils;
+package jee.wallet.model.validation;
 
 /**
- *
  * @author bissoqu1
  */
 public class MaxLengthValidator extends AbstractValidator<String> {

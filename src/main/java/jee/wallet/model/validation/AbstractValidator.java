@@ -1,13 +1,13 @@
-package fr.univ_rouen.bd.model.validation;
+package jee.wallet.model.validation;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.CollectionUtils;
 
 /**
- *
  * @author bissoqu1
  */
 public abstract class AbstractValidator<E> implements Validator<E> {
@@ -29,16 +29,16 @@ public abstract class AbstractValidator<E> implements Validator<E> {
     protected String getFieldName() {
         return fieldName;
     }
-    
-    protected String getErrorName() {
-        return errorName;
-    }
 
     @Override
     public void setFieldName(String s) {
         this.fieldName = s;
     }
-    
+
+    protected String getErrorName() {
+        return errorName;
+    }
+
     @Override
     public void setErrorName(String s) {
         this.errorName = s;

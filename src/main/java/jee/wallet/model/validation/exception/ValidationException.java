@@ -1,18 +1,18 @@
-package fr.univ_rouen.bd.model.validation.exception;
- 
+package jee.wallet.model.validation.exception;
+
 public class ValidationException extends RuntimeException {
     /*
      * Constructeurs
      */
-    public ValidationException( String message ) {
-        super( message );
+    public ValidationException(String message) {
+        super(message);
     }
- 
-    public ValidationException( String message, Throwable cause ) {
-        super( message, cause );
+
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
     }
- 
-    public ValidationException( Throwable cause ) {
-        super( cause );
+
+    public ValidationException(Throwable cause) {
+        super(cause);
     }
 }

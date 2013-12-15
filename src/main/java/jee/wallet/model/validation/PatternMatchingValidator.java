@@ -1,7 +1,6 @@
-package fr.univ_rouen.bd.model.validation;
+package jee.wallet.model.validation;
 
 /**
- *
  * @author bissoqu1
  */
 public class PatternMatchingValidator extends AbstractValidator<String> {
@@ -21,7 +20,7 @@ public class PatternMatchingValidator extends AbstractValidator<String> {
             addAllValidationMessage(validator.getValidationMessages());
             result = false;
         }
-        
+
         if (result && !e.matches(pattern)) {
             addValidationMessage(getErrorName(), "Le valeur du champ " + getFieldName() + " ne correspond pas au format attendu");
             result = false;

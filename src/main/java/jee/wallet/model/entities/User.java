@@ -1,131 +1,110 @@
 package jee.wallet.model.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
-import java.lang.Override;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
-@Inheritance(InheritanceType.SINGLE_TABLE)
-public abstract class User implements Serializable
-{
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class User implements Serializable {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id = null;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
+    @Column
+    private String username;
+    @Column
+    private String password;
+    @Transient
+    private String confirmationPassword;
+    @Column
+    private String salt;
+    @Temporal(TemporalType.DATE)
+    private Date lastConnection;
 
-   @Column
-   private String username;
+    public Long getId() {
+        return this.id;
+    }
 
-   @Column
-   private String password;
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   @Column
-   private String salt;
+    public String getUsername() {
+        return this.username;
+    }
 
-   @Temporal(TemporalType.DATE)
-   private Date lastConnection;
+    public void setUsername(final String username) {
+        this.username = username;
+    }
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public String getPassword() {
+        return this.password;
+    }
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    public void setPassword(final String password) {
+        this.password = password;
+    }
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((User) that).id);
-      }
-      return super.equals(that);
-   }
+    public String getConfirmationPassword() {
+        return confirmationPassword;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    public void setConfirmationPassword(String confirmationPassword) {
+        this.confirmationPassword = confirmationPassword;
+    }
 
-   public String getUsername()
-   {
-      return this.username;
-   }
+    public String getSalt() {
+        return this.salt;
+    }
 
-   public void setUsername(final String username)
-   {
-      this.username = username;
-   }
+    public void setSalt(final String salt) {
+        this.salt = salt;
+    }
 
-   public String getPassword()
-   {
-      return this.password;
-   }
+    public Date getLastConnection() {
+        return this.lastConnection;
+    }
 
-   public void setPassword(final String password)
-   {
-      this.password = password;
-   }
+    public void setLastConnection(final Date lastConnection) {
+        this.lastConnection = lastConnection;
+    }
 
-   public String getSalt()
-   {
-      return this.salt;
-   }
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((User) that).id);
+        }
+        return super.equals(that);
+    }
 
-   public void setSalt(final String salt)
-   {
-      this.salt = salt;
-   }
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
 
-   public Date getLastConnection()
-   {
-      return this.lastConnection;
-   }
-
-   public void setLastConnection(final Date lastConnection)
-   {
-      this.lastConnection = lastConnection;
-   }
-
-   @Override
-   public String toString()
-   {
-      String result = getClass().getSimpleName() + " ";
-      if (username != null && !username.trim().isEmpty())
-         result += "username: " + username;
-      if (password != null && !password.trim().isEmpty())
-         result += ", password: " + password;
-      if (salt != null && !salt.trim().isEmpty())
-         result += ", salt: " + salt;
-      return result;
-   }
+    @Override
+    public String toString() {
+        String result = getClass().getSimpleName() + " ";
+        if (username != null && !username.trim().isEmpty())
+            result += "username: " + username;
+        if (password != null && !password.trim().isEmpty())
+            result += ", password: " + password;
+        if (salt != null && !salt.trim().isEmpty())
+            result += ", salt: " + salt;
+        return result;
+    }
 }

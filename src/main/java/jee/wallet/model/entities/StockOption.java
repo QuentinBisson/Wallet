@@ -1,99 +1,75 @@
 package jee.wallet.model.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
-import java.lang.Override;
-import javax.persistence.ManyToOne;
-import jee.wallet.model.entities.Company;
 
 @Entity
-public class StockOption implements Serializable
-{
+public class StockOption implements Serializable {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id = null;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
+    @ManyToOne
+    private StockExchange stockExchange;
+    @ManyToOne
+    private Company company;
 
-   @ManyToOne
-   private StockExchange stockExchange;
+    public Long getId() {
+        return this.id;
+    }
 
-   @ManyToOne
-   private Company company;
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public StockExchange getStockExchange() {
+        return this.stockExchange;
+    }
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    public void setStockExchange(final StockExchange stockExchange) {
+        this.stockExchange = stockExchange;
+    }
 
-   @Override
-   public String toString()
-   {
-      String result = getClass().getSimpleName() + " ";
-      if (id != null)
-         result += "id: " + id;
-      return result;
-   }
+    public Company getCompany() {
+        return this.company;
+    }
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((StockExchange) that).id);
-      }
-      return super.equals(that);
-   }
+    public void setCompany(final Company company) {
+        this.company = company;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    @Override
+    public String toString() {
+        String result = getClass().getSimpleName() + " ";
+        if (id != null)
+            result += "id: " + id;
+        return result;
+    }
 
-   public StockExchange getStockExchange()
-   {
-      return this.stockExchange;
-   }
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((StockExchange) that).getId());
+        }
+        return super.equals(that);
+    }
 
-   public void setStockExchange(final StockExchange stockExchange)
-   {
-      this.stockExchange = stockExchange;
-   }
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
 
-   public Company getCompany()
-   {
-      return this.company;
-   }
-
-   public void setCompany(final Company company)
-   {
-      this.company = company;
-   }
 }
