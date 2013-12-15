@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class WalletHistory {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -63,9 +63,9 @@ public class WalletHistory {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WalletHistory)) return false;
+        if (!(o instanceof Transaction)) return false;
 
-        WalletHistory that = (WalletHistory) o;
+        Transaction that = (Transaction) o;
 
         if (!id.equals(that.id)) return false;
 

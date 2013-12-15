@@ -15,7 +15,7 @@ public class Wallet implements Serializable {
     @OneToOne
     private User user;
     @OneToMany
-    private List<WalletHistory> history = new ArrayList<WalletHistory>();
+    private List<Transaction> history = new ArrayList<Transaction>();
 
     public Long getId() {
         return this.id;
@@ -33,11 +33,11 @@ public class Wallet implements Serializable {
         this.user = user;
     }
 
-    public List<WalletHistory> getHistory() {
+    public List<Transaction> getHistory() {
         return history;
     }
 
-    public void setHistory(List<WalletHistory> history) {
+    public void setHistory(List<Transaction> history) {
         this.history = history;
     }
 
