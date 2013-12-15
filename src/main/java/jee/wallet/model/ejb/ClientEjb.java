@@ -4,7 +4,8 @@ import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
 @Stateless
-@LocalBean
-public class ClientEjb
+@RemoteBean
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+public class ClientEjb extends AbstractEjb
 {
 }

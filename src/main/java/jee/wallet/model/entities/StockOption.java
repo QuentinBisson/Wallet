@@ -19,12 +19,9 @@ public class StockOption implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   @Version
-   @Column(name = "version")
-   private int version = 0;
 
    @ManyToOne
-   private StockOption options;
+   private StockExchange stockExchange;
 
    @ManyToOne
    private Company company;
@@ -37,16 +34,6 @@ public class StockOption implements Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override
@@ -75,7 +62,7 @@ public class StockOption implements Serializable
       }
       if (id != null)
       {
-         return id.equals(((StockOption) that).id);
+         return id.equals(((StockExchange) that).id);
       }
       return super.equals(that);
    }
@@ -90,14 +77,14 @@ public class StockOption implements Serializable
       return super.hashCode();
    }
 
-   public StockOption getOptions()
+   public StockExchange getStockExchange()
    {
-      return this.options;
+      return this.stockExchange;
    }
 
-   public void setOptions(final StockOption options)
+   public void setStockExchange(final StockExchange stockExchange)
    {
-      this.options = options;
+      this.stockExchange = stockExchange;
    }
 
    public Company getCompany()

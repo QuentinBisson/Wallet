@@ -23,18 +23,15 @@ public class StockExchange implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   @Version
-   @Column(name = "version")
-   private int version = 0;
 
    @Column
    private String name;
 
    @ManyToMany
-   private Set<Company> companies = new HashSet<Company>();
+   private List<Company> companies = new ArrayList<Company>();
 
    @OneToMany
-   private Set<StockOption> options = new HashSet<StockOption>();
+   private List<StockOption> options = new ArrayList<StockOption>();
 
    public Long getId()
    {
@@ -44,16 +41,6 @@ public class StockExchange implements Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override
@@ -107,22 +94,22 @@ public class StockExchange implements Serializable
       return result;
    }
 
-   public Set<Company> getCompanies()
+   public List<Company> getCompanies()
    {
       return this.companies;
    }
 
-   public void setCompanies(final Set<Company> companies)
+   public void setCompanies(final List<Company> companies)
    {
       this.companies = companies;
    }
 
-   public Set<StockOption> getOptions()
+   public List<StockOption> getOptions()
    {
       return this.options;
    }
 
-   public void setOptions(final Set<StockOption> options)
+   public void setOptions(final List<StockOption> options)
    {
       this.options = options;
    }

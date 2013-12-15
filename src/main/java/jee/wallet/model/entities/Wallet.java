@@ -11,8 +11,6 @@ import java.lang.Override;
 import javax.persistence.OneToOne;
 import jee.wallet.model.entities.User;
 import jee.wallet.model.entities.StockOption;
-import java.util.Set;
-import java.util.HashSet;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -23,15 +21,12 @@ public class Wallet implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   @Version
-   @Column(name = "version")
-   private int version = 0;
 
    @OneToOne
    private User user;
 
    @OneToMany
-   private Set<StockOption> stockOptions = new HashSet<StockOption>();
+   private List<StockOption> stockOptions = new ArrayList<StockOption>();
 
    public Long getId()
    {
@@ -41,16 +36,6 @@ public class Wallet implements Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override
@@ -95,12 +80,12 @@ public class Wallet implements Serializable
       this.user = user;
    }
 
-   public Set<StockOption> getStockOptions()
+   public List<StockOption> getStockOptions()
    {
       return this.stockOptions;
    }
 
-   public void setStockOptions(final Set<StockOption> stockOptions)
+   public void setStockOptions(final List<StockOption> stockOptions)
    {
       this.stockOptions = stockOptions;
    }

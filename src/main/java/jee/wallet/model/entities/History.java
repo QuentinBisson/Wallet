@@ -19,9 +19,6 @@ public class History implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   @Version
-   @Column(name = "version")
-   private int version = 0;
 
    @ManyToOne
    private Company company;
@@ -34,16 +31,6 @@ public class History implements Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override

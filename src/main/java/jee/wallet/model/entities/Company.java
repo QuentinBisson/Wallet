@@ -25,10 +25,7 @@ public class Company implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   @Version
-   @Column(name = "version")
-   private int version = 0;
-
+   
    @Column
    private String code;
 
@@ -42,10 +39,10 @@ public class Company implements Serializable
    private Date creationDate;
 
    @OneToMany
-   private Set<History> history = new HashSet<History>();
+   private List<History> history = new ArrayList<History>();
 
    @OneToMany
-   private Set<StockOption> options = new HashSet<StockOption>();
+   private List<StockOption> options = new ArrayList<StockOption>();
 
    public Long getId()
    {
@@ -55,16 +52,6 @@ public class Company implements Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override
@@ -152,22 +139,22 @@ public class Company implements Serializable
       return result;
    }
 
-   public Set<History> getHistory()
+   public List<History> getHistory()
    {
       return this.history;
    }
 
-   public void setHistory(final Set<History> history)
+   public void setHistory(final List<History> history)
    {
       this.history = history;
    }
 
-   public Set<StockOption> getOptions()
+   public List<StockOption> getOptions()
    {
       return this.options;
    }
 
-   public void setOptions(final Set<StockOption> options)
+   public void setOptions(final List<StockOption> options)
    {
       this.options = options;
    }
