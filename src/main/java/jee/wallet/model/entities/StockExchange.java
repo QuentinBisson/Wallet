@@ -15,9 +15,14 @@ public class StockExchange implements Serializable {
     @Column
     private String name;
     @ManyToMany
-    private List<Company> companies = new ArrayList<Company>();
+    private List<Company> companies;
     @OneToMany
-    private List<StockOption> options = new ArrayList<StockOption>();
+    private List<StockOption> options;
+
+    public StockExchange() {
+        companies = new ArrayList<Company>();
+        options = new ArrayList<StockOption>();
+    }
 
     public Long getId() {
         return this.id;

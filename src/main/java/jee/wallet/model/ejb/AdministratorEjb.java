@@ -5,44 +5,53 @@ import jee.wallet.model.entities.Administrator;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class AdministratorEjb extends AbstractEjb<Administrator>
+public class AdministratorEjb extends AbstractEjb
         implements CrudInterface<Administrator> {
 
     @Override
     public void create(Administrator administrator) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Administrator findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(Administrator administrator) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Administrator> findByEntity(Administrator administrator) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Administrator> findAll() {
+        return null;
     }
 
     @Override
     public void update(Administrator administrator) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The administrator does not exist.");
+        }
+        Administrator administrator = findById(id);
+        delete(administrator);
     }
 
     @Override
     public void delete(Administrator administrator) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (administrator == null) {
+            throw new IllegalArgumentException("The administrator does not exist.");
+        }
+        em.remove(administrator);
+        em.flush();
     }
 }

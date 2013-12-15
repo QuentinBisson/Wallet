@@ -6,46 +6,56 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class StockOptionEjb extends AbstractEjb<StockOption> implements CrudInterface<StockOption>  {
+public class StockOptionEjb extends AbstractEjb implements CrudInterface<StockOption>  {
     @EJB
     private CompanyEjb companyEjb;
     @EJB
     private StockExchangeEjb stockExchangeEjb;
+
     @Override
     public void create(StockOption stockOption) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public StockOption findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(StockOption stockOption) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<StockOption> findByEntity(StockOption stockOption) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<StockOption> findAll() {
+        return null;
     }
 
     @Override
     public void update(StockOption stockOption) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The stock option does not exist.");
+        }
+        StockOption stockOption = findById(id);
+        delete(stockOption);
     }
 
     @Override
     public void delete(StockOption stockOption) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (stockOption == null) {
+            throw new IllegalArgumentException("The stock option does not exist.");
+        }
+        em.remove(stockOption);
+        em.flush();
     }
 }

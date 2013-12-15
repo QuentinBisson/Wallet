@@ -13,9 +13,13 @@ public class Wallet implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id = null;
     @OneToOne
-    private User user;
+    private Client client;
     @OneToMany
-    private List<Transaction> history = new ArrayList<Transaction>();
+    private List<Transaction> history;
+
+    public Wallet() {
+        this.history = new ArrayList<Transaction>();
+    }
 
     public Long getId() {
         return this.id;
@@ -25,12 +29,12 @@ public class Wallet implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
-        return this.user;
+    public Client getClient() {
+        return this.client;
     }
 
-    public void setUser(final User user) {
-        this.user = user;
+    public void setClient(final Client client) {
+        this.client = client;
     }
 
     public List<Transaction> getHistory() {

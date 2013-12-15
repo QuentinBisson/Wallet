@@ -6,32 +6,44 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wallet> {
+public class WalletEjb extends AbstractEjb implements CrudInterface<Wallet> {
     @EJB
     private TransactionEjb transactionEjb;
     @EJB
-    private UserEjb userEjb;
+    private ClientEjb clientEjb;
+
     @Override
     public void create(Wallet wallet) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet must be not null.");
+        }
+        if (wallet.getClient() == null) {
+            throw new IllegalStateException("The wallet is in an invalid state.");
+        }
+        if (em.contains(wallet)) {
+            throw new IllegalStateException("The wallet is in an invalid state.");
+        }
+        em.persist(wallet);
+        em.flush();
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Wallet findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(Wallet wallet) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Wallet> findByEntity(Wallet wallet) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Wallet> findAll() {
+        return null;
     }
 
     @Override
@@ -41,11 +53,19 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        Wallet wallet = findById(id);
+        delete(wallet);
     }
 
     @Override
     public void delete(Wallet wallet) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        em.remove(wallet);
+        em.flush();
     }
 }

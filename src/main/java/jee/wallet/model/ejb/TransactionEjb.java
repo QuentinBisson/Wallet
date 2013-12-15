@@ -6,32 +6,32 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class TransactionEjb extends AbstractEjb<Transaction>
-        implements CrudInterface<Transaction> {
+public class TransactionEjb extends AbstractEjb implements CrudInterface<Transaction> {
     @EJB
     private StockOptionEjb stockOptionEjb;
 
     @Override
     public void create(Transaction transaction) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Transaction findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(Transaction transaction) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Transaction> findByEntity(Transaction transaction) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Transaction> findAll() {
+        return null;
     }
 
     @Override
@@ -41,11 +41,19 @@ public class TransactionEjb extends AbstractEjb<Transaction>
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The transaction does not exist.");
+        }
+        Transaction transaction = findById(id);
+        delete(transaction);
     }
 
     @Override
     public void delete(Transaction transaction) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (transaction == null) {
+            throw new IllegalArgumentException("The transaction does not exist.");
+        }
+        em.remove(transaction);
+        em.flush();
     }
 }

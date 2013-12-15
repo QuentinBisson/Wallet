@@ -22,11 +22,17 @@ public class Company implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date creationDate;
     @OneToMany
-    private List<History> history = new ArrayList<History>();
+    private List<History> history;
     @ManyToMany
-    private List<StockExchange> stockExchanges = new ArrayList<StockExchange>();
+    private List<StockExchange> stockExchanges;
     @OneToMany
-    private List<StockOption> options = new ArrayList<StockOption>();
+    private List<StockOption> options;
+
+    public Company() {
+        history = new ArrayList<History>();
+        options = new ArrayList<StockOption>();
+        stockExchanges = new ArrayList<StockExchange>();
+    }
 
     public Long getId() {
         return this.id;

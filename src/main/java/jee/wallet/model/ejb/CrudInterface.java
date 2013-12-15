@@ -1,17 +1,18 @@
 package jee.wallet.model.ejb;
 
 import javax.ejb.Remote;
+import java.util.List;
 
 @Remote
 public interface CrudInterface<E> {
 
     public void create(E e);
 
-    public void findById(long id);
+    public E findById(long id);
 
-    public void findByEntity(E e);
+    public List<E> findByEntity(E e);
 
-    public void findAll();
+    public List<E> findAll();
 
     public void update(E e);
 

@@ -18,8 +18,6 @@ public abstract class User implements Serializable {
     private String password;
     @Transient
     private String confirmationPassword;
-    @Column
-    private String salt;
     @Temporal(TemporalType.DATE)
     private Date lastConnection;
 
@@ -53,14 +51,6 @@ public abstract class User implements Serializable {
 
     public void setConfirmationPassword(String confirmationPassword) {
         this.confirmationPassword = confirmationPassword;
-    }
-
-    public String getSalt() {
-        return this.salt;
-    }
-
-    public void setSalt(final String salt) {
-        this.salt = salt;
     }
 
     public Date getLastConnection() {
@@ -103,8 +93,6 @@ public abstract class User implements Serializable {
             result += "username: " + username;
         if (password != null && !password.trim().isEmpty())
             result += ", password: " + password;
-        if (salt != null && !salt.trim().isEmpty())
-            result += ", salt: " + salt;
         return result;
     }
 }

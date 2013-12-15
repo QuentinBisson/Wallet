@@ -18,7 +18,11 @@ public class Transaction {
     @Enumerated
     private OperationType type;
     @OneToMany
-    private List<StockOption> stockOptions = new ArrayList<StockOption>();
+    private List<StockOption> stockOptions;
+
+    public Transaction() {
+        this.stockOptions = new ArrayList<StockOption>();
+    }
 
     public Date getDate() {
         return date;

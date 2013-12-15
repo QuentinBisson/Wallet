@@ -6,45 +6,54 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class HistoryEjb extends AbstractEjb<History> implements CrudInterface<History> {
+public class HistoryEjb extends AbstractEjb implements CrudInterface<History> {
     @EJB
     private CompanyEjb companyEjb;
 
     @Override
     public void create(History history) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public History findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(History history) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<History> findByEntity(History history) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<History> findAll() {
+        return null;
     }
 
     @Override
     public void update(History history) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The client does not exist.");
+        }
+        History history = findById(id);
+        delete(history);
     }
 
     @Override
     public void delete(History history) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (history == null) {
+            throw new IllegalArgumentException("The history does not exist.");
+        }
+        em.remove(history);
+        em.flush();
     }
 }

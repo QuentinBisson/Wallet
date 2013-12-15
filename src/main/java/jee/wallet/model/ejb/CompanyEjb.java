@@ -6,10 +6,11 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class CompanyEjb extends AbstractEjb<Company> implements CrudInterface<Company> {
+public class CompanyEjb extends AbstractEjb implements CrudInterface<Company> {
 
     @EJB
     private HistoryEjb historyEjb;
@@ -20,36 +21,44 @@ public class CompanyEjb extends AbstractEjb<Company> implements CrudInterface<Co
 
     @Override
     public void create(Company company) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
-    public void findById(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Company findById(long id) {
+        return null;
     }
 
     @Override
-    public void findByEntity(Company company) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Company> findByEntity(Company company) {
+        return null;
     }
 
     @Override
-    public void findAll() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public List<Company> findAll() {
+        return null;
     }
 
     @Override
     public void update(Company company) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void delete(long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (id < 0) {
+            throw new IllegalArgumentException("The company does not exist.");
+        }
+        Company company = findById(id);
+        delete(company);
     }
 
     @Override
     public void delete(Company company) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (company == null) {
+            throw new IllegalArgumentException("The company does not exist.");
+        }
+        em.remove(company);
+        em.flush();
     }
 }
