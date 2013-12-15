@@ -1,5 +1,5 @@
 package jee.wallet.model.entities;
 
-public enum UserStatusType {
+public enum ClientType {
     NORMAL, PRIVILEGED
 }

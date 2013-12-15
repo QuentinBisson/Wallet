@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public abstract class AbstractEjb<E> implements EjbInterface<E> {
+public abstract class AbstractEjb<E> {
 
     @PersistenceContext
     protected EntityManager em;

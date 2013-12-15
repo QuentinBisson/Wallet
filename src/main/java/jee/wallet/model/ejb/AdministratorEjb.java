@@ -1,21 +1,18 @@
 package jee.wallet.model.ejb;
 
-import jee.wallet.model.entities.Wallet;
+import jee.wallet.model.entities.Administrator;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wallet> {
-    @EJB
-    private TransactionEjb transactionEjb;
-    @EJB
-    private UserEjb userEjb;
+public class AdministratorEjb extends AbstractEjb<Administrator>
+        implements CrudInterface<Administrator> {
+
     @Override
-    public void create(Wallet wallet) {
+    public void create(Administrator administrator) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -25,7 +22,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void findByEntity(Wallet wallet) {
+    public void findByEntity(Administrator administrator) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -35,7 +32,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void update(Wallet wallet) {
+    public void update(Administrator administrator) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -45,7 +42,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void delete(Wallet wallet) {
+    public void delete(Administrator administrator) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

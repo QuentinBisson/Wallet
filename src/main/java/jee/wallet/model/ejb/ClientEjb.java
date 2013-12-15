@@ -2,13 +2,17 @@ package jee.wallet.model.ejb;
 
 import jee.wallet.model.entities.Client;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ClientEjb extends AbstractEjb<Client> {
+public class ClientEjb extends AbstractEjb<Client>
+        implements CrudInterface<Client> {
+    @EJB
+    private WalletEjb walletEjb;
     @Override
     public void create(Client client) {
         //To change body of implemented methods use File | Settings | File Templates.

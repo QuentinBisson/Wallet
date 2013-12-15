@@ -1,6 +1,6 @@
 package jee.wallet.model.ejb;
 
-import jee.wallet.model.entities.Wallet;
+import jee.wallet.model.entities.Transaction;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -9,13 +9,13 @@ import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wallet> {
+public class TransactionEjb extends AbstractEjb<Transaction>
+        implements CrudInterface<Transaction> {
     @EJB
-    private TransactionEjb transactionEjb;
-    @EJB
-    private UserEjb userEjb;
+    private StockOptionEjb stockOptionEjb;
+
     @Override
-    public void create(Wallet wallet) {
+    public void create(Transaction transaction) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -25,7 +25,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void findByEntity(Wallet wallet) {
+    public void findByEntity(Transaction transaction) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -35,7 +35,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void update(Wallet wallet) {
+    public void update(Transaction transaction) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -45,7 +45,7 @@ public class WalletEjb extends AbstractEjb<Wallet> implements CrudInterface<Wall
     }
 
     @Override
-    public void delete(Wallet wallet) {
+    public void delete(Transaction transaction) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

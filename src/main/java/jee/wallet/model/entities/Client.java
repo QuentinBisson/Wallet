@@ -15,7 +15,7 @@ public class Client extends User implements Serializable {
     @Column
     private String lastName;
     @Enumerated
-    private UserStatusType status;
+    private ClientType type;
     @OneToOne
     private Wallet wallet;
 
@@ -51,12 +51,12 @@ public class Client extends User implements Serializable {
         this.wallet = wallet;
     }
 
-    public UserStatusType getStatus() {
-        return status;
+    public ClientType getType() {
+        return type;
     }
 
-    public void setStatus(UserStatusType status) {
-        this.status = status;
+    public void setType(ClientType type) {
+        this.type = type;
     }
 
     @Override

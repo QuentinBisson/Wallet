@@ -2,16 +2,14 @@ package jee.wallet.model.ejb;
 
 import jee.wallet.model.entities.User;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class UserEjb extends AbstractEjb<User> {
-    @EJB
-    private WalletEjb walletEjb;
+public class UserEjb extends AbstractEjb<User>
+        implements CrudInterface<User>  {
 
     @Override
     public void create(User user) {

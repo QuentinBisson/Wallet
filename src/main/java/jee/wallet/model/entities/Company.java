@@ -23,6 +23,8 @@ public class Company implements Serializable {
     private Date creationDate;
     @OneToMany
     private List<History> history = new ArrayList<History>();
+    @ManyToMany
+    private List<StockExchange> stockExchanges = new ArrayList<StockExchange>();
     @OneToMany
     private List<StockOption> options = new ArrayList<StockOption>();
 
@@ -80,6 +82,14 @@ public class Company implements Serializable {
 
     public void setOptions(final List<StockOption> options) {
         this.options = options;
+    }
+
+    public List<StockExchange> getStockExchanges() {
+        return stockExchanges;
+    }
+
+    public void setStockExchanges(List<StockExchange> stockExchanges) {
+        this.stockExchanges = stockExchanges;
     }
 
     @Override

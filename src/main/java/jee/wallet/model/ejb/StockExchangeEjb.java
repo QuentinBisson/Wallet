@@ -2,13 +2,20 @@ package jee.wallet.model.ejb;
 
 import jee.wallet.model.entities.StockExchange;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class StockExchangeEjb extends AbstractEjb<StockExchange> {
+public class StockExchangeEjb extends AbstractEjb<StockExchange>
+        implements CrudInterface<StockExchange> {
+    @EJB
+    private CompanyEjb companyEjb;
+    @EJB
+    private StockOptionEjb stockOptionEjb;
+
     @Override
     public void create(StockExchange stockExchange) {
         //To change body of implemented methods use File | Settings | File Templates.
