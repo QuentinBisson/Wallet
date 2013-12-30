@@ -16,8 +16,7 @@ import java.util.Map;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class UserEjb extends AbstractEjb
-        implements CrudInterface<User>, UserEjbInterface  {
+public class UserEjb extends AbstractEjb implements UserEjbInterface {
 
     private static final String SELECT_BY_ID = "SELECT u FROM User u WHERE u.id=:id";
     private static final String SELECT_ALL = "SELECT u FROM User u";

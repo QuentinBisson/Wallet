@@ -1,6 +1,8 @@
 package jee.wallet.model.ejb;
 
 import jee.wallet.model.entities.Company;
+import jee.wallet.model.entities.History;
+import jee.wallet.model.entities.StockExchange;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class CompanyEjb extends AbstractEjb implements CrudInterface<Company> {
+public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
 
     @EJB
     private HistoryEjb historyEjb;
@@ -70,6 +72,18 @@ public class CompanyEjb extends AbstractEjb implements CrudInterface<Company> {
         StringBuilder sb = new StringBuilder(prefix);
         String separator = " WHERE ";
         if (company != null) {
+            if (company.getStockExchanges() != null && !company.getStockExchanges().isEmpty()) {
+                sb.append(" inner join c.stockExchanges se ").append(separator).append(" (");
+                separator = "";
+                for (StockExchange se : company.getStockExchanges()) {
+                    int i = 0;
+                    sb.append(separator).append("se.id = :seid" + i);
+                    params.put("seid" + i, se.getId());
+                    separator = " OR ";
+                }
+                sb.append(") ");
+                separator = " AND ";
+            }
             if (StringUtils.isNotBlank(company.getCode())) {
                 sb.append(separator).append("c.code = :code");
                 params.put("code", company.getCode());
@@ -142,5 +156,10 @@ public class CompanyEjb extends AbstractEjb implements CrudInterface<Company> {
         }
         em.remove(company);
         em.flush();
+    }
+
+    @Override
+    public History getRealTimeValue(Company company) {
+        return null;
     }
 }

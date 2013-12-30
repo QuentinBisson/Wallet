@@ -1,5 +1,8 @@
 package jee.wallet.model.ejb;
 
+import jee.wallet.model.entities.Company;
+import jee.wallet.model.entities.StockExchange;
+import jee.wallet.model.entities.StockOption;
 import jee.wallet.model.entities.Wallet;
 
 import javax.ejb.EJB;
@@ -13,7 +16,7 @@ import java.util.Map;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class WalletEjb extends AbstractEjb implements CrudInterface<Wallet> {
+public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     @EJB
     private TransactionEjb transactionEjb;
     @EJB
@@ -127,5 +130,66 @@ public class WalletEjb extends AbstractEjb implements CrudInterface<Wallet> {
         }
         em.remove(wallet);
         em.flush();
+    }
+
+    @Override
+    public void buyStockOptions(Wallet wallet, List<StockOption> options) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        //TODO
+        update(wallet);
+    }
+
+    @Override
+    public void supply(Wallet wallet, double amount) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        if (amount <= 0) {
+            throw new IllegalArgumentException("The supplied amount can't be 0 or under");
+        }
+        wallet.setBalance(wallet.getBalance() + amount);
+        update(wallet);
+    }
+
+    @Override
+    public void withdraw(Wallet wallet, double amount) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        if (amount >= 0) {
+            throw new IllegalArgumentException("The supplied amount can't be 0 or over");
+        }
+        wallet.setBalance(wallet.getBalance() + amount);
+        update(wallet);
+    }
+
+    @Override
+    public void sellStockOptions(Wallet wallet, List<StockOption> options) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        //TODO
+        update(wallet);
+    }
+
+    @Override
+    public List<StockOption> getOptionsForCompanyInStockExchange(Wallet wallet, Company company, StockExchange stockExchange) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        StringBuilder sb = new StringBuilder(SELECT_ALL);
+        String separator = " WHERE ";
+        sb.append(" inner join w.company c ");
+        sb.append(" inner join c.stockExchange se ");
+        sb.append(separator).append(" c.id = :companyid");
+        params.put("companyid", company.getId());
+        separator = " AND ";
+        sb.append(separator).append(" se.id = :stockid");
+        params.put("stockid", stockExchange.getId());
+
+        Query q = em.createQuery(sb.toString());
+        setParameters(q, params);
+        return (List<StockOption>) createSearchQuery(SELECT_ALL, wallet)
+                .getResultList();
     }
 }

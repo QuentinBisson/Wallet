@@ -12,6 +12,8 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id = null;
+    @Column
+    private Double balance;
     @OneToOne
     private Client client;
     @OneToMany
@@ -27,6 +29,14 @@ public class Wallet implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public Client getClient() {
@@ -69,4 +79,6 @@ public class Wallet implements Serializable {
         }
         return super.hashCode();
     }
+
+
 }

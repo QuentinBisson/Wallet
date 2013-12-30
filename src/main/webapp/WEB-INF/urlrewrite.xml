@@ -23,50 +23,37 @@
         <from>/rewrite-status</from>
         <to>/test/status/</to>
     </outbound-rule>
+
     <outbound-rule encodefirst="true">
         <note>Remove jsessionid from embedded urls - for urls WITH query parameters</note>
         <from>^/(.*);jsessionid=.*[?](.*)$</from>
         <to encode="false">/$1?$2</to>
     </outbound-rule>
 
-
     <outbound-rule encodefirst="true">
         <note>Remove jsessionid from embedded urls - for urls WITHOUT query parameters</note>
         <from>^/(.*);jsessionid=.*[^?]$</from>
         <to encode="false">/$1</to>
     </outbound-rule>
+
     <rule>
-        <from>/show/(.+)?</from>
-        <to>/show?resource=$1</to>
-    </rule>
-    <rule>
-        <from>/update/(.+)?</from>
-        <to>/update?resource=$1</to>
-    </rule>
-        
-    <rule>
-        <from>/delete/(.+)?</from>
-        <to>/delete?resource=$1</to>
+        <from>/admin/*</from>
+        <to>/admin</to>
     </rule>
 
     <rule>
-        <from>/export/(html|pdf)?/(.+)?</from>
-        <to>/export?format=$1&amp;resource=$2</to>
+        <from>/login/*</from>
+        <to>/login</to>
     </rule>
+
     <rule>
-        <from>^/$</from>
-        <to>/home?page=1</to>
+        <from>/wallet/*</from>
+        <to>/wallet</to>
     </rule>
+
     <rule>
-        <from>^/([0-9]+)?$</from>
-        <to>/home?page=$1</to>
+        <from>^/</from>
+        <to>/home</to>
     </rule>
-    <rule>
-        <from>^/([0-9]+)?/$</from>
-        <to>/home?page=$1</to>
-    </rule>
-    <rule>
-        <from>/search/([0-9]+)?/$</from>
-        <to>/search?page=$1</to>
-    </rule>
+
 </urlrewrite>

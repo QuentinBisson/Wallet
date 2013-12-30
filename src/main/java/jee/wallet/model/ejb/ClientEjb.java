@@ -1,7 +1,6 @@
 package jee.wallet.model.ejb;
 
-import jee.wallet.model.entities.Client;
-import jee.wallet.model.entities.Wallet;
+import jee.wallet.model.entities.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
@@ -17,8 +16,8 @@ import java.util.Map;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ClientEjb extends AbstractEjb
-        implements CrudInterface<Client> {
+public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
+
     @EJB
     private WalletEjb walletEjb;
 
@@ -46,6 +45,12 @@ public class ClientEjb extends AbstractEjb
             throw new IllegalStateException("Missing hash algorithm");
         }
 
+        if (client.getStatus() == null) {
+            client.setStatus(ClientStatusType.OPEN);
+        }
+        if (client.getType() == null) {
+            client.setType(ClientType.NORMAL);
+        }
         em.persist(client);
         walletEjb.create(wallet);
         em.flush();
@@ -156,5 +161,80 @@ public class ClientEjb extends AbstractEjb
         }
         em.remove(client);
         em.flush();
+    }
+
+    @Override
+    public void buyStockOptions(Client client, Company company, StockExchange stockExchange, int amount) {
+        if (client == null) {
+            throw new IllegalArgumentException("The client must be not null.");
+        }
+        if (!em.contains(client)) {
+            throw new IllegalStateException("The client is in an invalid state.");
+        }
+
+        if (company == null) {
+            throw new IllegalArgumentException("The company must be not null.");
+        }
+        if (!em.contains(company)) {
+            throw new IllegalStateException("The company is in an invalid state.");
+        }
+
+        if (stockExchange == null) {
+            throw new IllegalArgumentException("The stock exchange must be not null.");
+        }
+        if (!em.contains(stockExchange)) {
+            throw new IllegalStateException("The stock exchange is in an invalid state.");
+        }
+
+        List<StockOption> options = walletEjb.getOptionsForCompanyInStockExchange(client.getWallet(),
+                company, stockExchange);
+        if (amount <= 0 || amount > options.size()) {
+            throw new IllegalArgumentException("The supplied amount can't be 0 or under");
+        }
+        //TODO frais = 0.5%de la transaction
+    }
+
+    @Override
+    public void supply(Client client, double amount) {
+        if (client == null) {
+            throw new IllegalArgumentException("The client must be not null.");
+        }
+        if (!em.contains(client)) {
+            throw new IllegalStateException("The client is in an invalid state.");
+        }
+
+        if (amount <= 0) {
+            throw new IllegalArgumentException("The supplied amount can't be 0 or under");
+        }
+        walletEjb.supply(client.getWallet(), amount);
+    }
+
+    @Override
+    public void withdraw(Client client, double amount) {
+        if (client == null) {
+            throw new IllegalArgumentException("The client must be not null.");
+        }
+        if (!em.contains(client)) {
+            throw new IllegalStateException("The client is in an invalid state.");
+        }
+
+        if (amount >= 0) {
+            throw new IllegalArgumentException("The supplied amount can't be 0 or over");
+        }
+        walletEjb.withdraw(client.getWallet(), amount);
+    }
+
+    @Override
+    public void sellStockOptions(Client client, Company company, StockExchange stockExchange, int amount) {
+        //TODO  frais = 0.5%de la transaction
+    }
+
+    @Override
+    public void closeAccount(Client client) {
+        if (client == null) {
+            throw new IllegalArgumentException("The client must be not null.");
+        }
+        client.setStatus(ClientStatusType.CLOSED);
+        update(client);
     }
 }
