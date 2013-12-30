@@ -8,10 +8,12 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.Query;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -20,13 +22,9 @@ public class ClientEjb extends AbstractEjb
     @EJB
     private WalletEjb walletEjb;
 
-    private String hashPassword(String password) throws NoSuchAlgorithmException,
-            UnsupportedEncodingException {
-        MessageDigest digest = null;
-        digest = MessageDigest.getInstance("SHA-512");
-        byte[] hash = digest.digest(password.getBytes("UTF-8"));
-        return hash.toString();
-    }
+    private static final String SELECT_BY_ID = "SELECT c FROM Client c WHERE c.id=:id";
+    private static final String SELECT_ALL = "SELECT c FROM Client c";
+    private static final String COUNT_ALL = "SELECT COUNT(c) FROM Client c";
 
     @Override
     public void create(Client client) {
@@ -41,8 +39,7 @@ public class ClientEjb extends AbstractEjb
         wallet.setClient(client);
 
         try {
-            String password = hashPassword(client.getPassword());
-            client.setPassword(password);
+            UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
@@ -56,20 +53,66 @@ public class ClientEjb extends AbstractEjb
 
     @Override
     public Client findById(long id) {
-        //TODO
-        return null;
+        return (Client) em.createQuery(SELECT_BY_ID)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
-    public List<Client> findByEntity(Client client) {
-        //TODO
-        return null;
+    public List<Client> findAll(int offset, int limit) {
+        return (List<Client>) em.createQuery(SELECT_ALL)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
-    public List<Client> findAll() {
-        //TODO
-        return null;
+    public int countAll() {
+        return ((Number) em.createQuery(COUNT_ALL)
+                .getSingleResult())
+                .intValue();
+    }
+
+    private Query createSearchQuery(String prefix, Client client) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        StringBuilder sb = new StringBuilder(prefix);
+        String separator = "WHERE ";
+        if (client != null) {
+            if (StringUtils.isNotBlank(client.getUsername())) {
+                sb.append(separator).append("c.username = %:username%");
+                params.put("username", client.getUsername());
+                separator = " AND ";
+            }
+            if (StringUtils.isNotBlank(client.getFirstName())) {
+                sb.append(separator).append("c.firstname = %:firstname%");
+                params.put("firstname", client.getFirstName());
+                separator = " AND ";
+            }
+            if (StringUtils.isNotBlank(client.getLastName())) {
+                sb.append(separator).append("c.lastname = %:lastname%");
+                params.put("lastname", client.getLastName());
+                separator = " AND ";
+            }
+        }
+
+        Query q = em.createQuery(sb.toString());
+        setParameters(q, params);
+        return q;
+    }
+
+    @Override
+    public List<Client> search(Client client, int offset, int limit) {
+        return (List<Client>) createSearchQuery(SELECT_ALL, client)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    @Override
+    public int countSearch(Client client) {
+        return ((Number) createSearchQuery(COUNT_ALL, client)
+                .getSingleResult())
+                .intValue();
     }
 
     @Override
@@ -84,13 +127,8 @@ public class ClientEjb extends AbstractEjb
         if (c == null) {
             throw new IllegalArgumentException("The client is invalid.");
         }
-
-        //Check if password has changed
         try {
-            String password = hashPassword(client.getPassword());
-            if (!StringUtils.equals(password, c.getPassword())) {
-                client.setPassword(password);
-            }
+            UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {

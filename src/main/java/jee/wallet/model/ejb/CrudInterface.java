@@ -10,9 +10,10 @@ public interface CrudInterface<E> {
 
     public E findById(long id);
 
-    public List<E> findByEntity(E e);
-
-    public List<E> findAll();
+    public List<E> search(E e, int offset, int limit);
+    public int countSearch(E e);
+    public List<E> findAll(int offset, int limit);
+    public int countAll();
 
     public void update(E e);
 

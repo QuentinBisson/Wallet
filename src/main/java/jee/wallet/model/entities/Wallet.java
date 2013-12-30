@@ -15,10 +15,10 @@ public class Wallet implements Serializable {
     @OneToOne
     private Client client;
     @OneToMany
-    private List<Transaction> history;
+    private List<Transaction> transactions;
 
     public Wallet() {
-        this.history = new ArrayList<Transaction>();
+        this.transactions = new ArrayList<Transaction>();
     }
 
     public Long getId() {
@@ -37,12 +37,12 @@ public class Wallet implements Serializable {
         this.client = client;
     }
 
-    public List<Transaction> getHistory() {
-        return history;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setHistory(List<Transaction> history) {
-        this.history = history;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     @Override
