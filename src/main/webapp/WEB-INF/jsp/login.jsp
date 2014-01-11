@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Login page</title>
+    <title>Connection</title>
 </head>
 <body>
     <c:import url="/WEB-INF/jsp/header.jsp"/>
