@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Connection</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <h:form>
+                <p:panel id="panel" header="Connection" style="margin-bottom:10px;">  
+                    <p:messages id="messages" />  
+                    <h:panelGrid columns="3">  
+                        <h:outputLabel for="username" value="Identifiant:" />
+                        <p:inputText value="" id="username"/> <br/>
+                        <h:outputLabel for="password" value="Mot de passe : "/>
+                        <p:password value="" id="password"/> <br/>
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton value="Connection" ajax="false" styleClass="ui-priority-primary"/>  
+                </p:panel>
+            </h:form>
+        </h:body>
+
+    </f:view>
+</html>
+
+
