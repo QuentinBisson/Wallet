@@ -61,9 +61,9 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
         StringBuilder sb = new StringBuilder(prefix);
         String separator = " WHERE ";
         if (transaction != null) {
-            if (transaction.getDate() != null) {
+            if (transaction.getTransactionDate() != null) {
                 sb.append(separator).append("t.date >= :tdate");
-                params.put("tdate", transaction.getDate());
+                params.put("tdate", transaction.getTransactionDate());
             }
             if (transaction.getPrice() > 0) {
                 sb.append(separator).append("t.price >= :price");

@@ -3,7 +3,7 @@
   <persistence-unit name="walletManager" transaction-type="JTA">
     <description>Wallet manager persistence unit</description>
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <jta-data-source>jdbc/vm-qbisson</jta-data-source>
+    <jta-data-source>jdbc/__default</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>

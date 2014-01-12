@@ -1,12 +1,14 @@
 package jee.wallet.model.entities;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Transaction {
+@Table(name="Wallet_Transaction")
+public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -14,7 +16,7 @@ public class Transaction {
     @Column
     private double price;
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private Date transactionDate;
     @Enumerated
     private OperationType type;
     @OneToMany
@@ -24,12 +26,12 @@ public class Transaction {
         this.stockOptions = new ArrayList<StockOption>();
     }
 
-    public Date getDate() {
-        return date;
+    public Date getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
     public Long getId() {

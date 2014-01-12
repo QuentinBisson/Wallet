@@ -2,7 +2,11 @@ package jee.wallet.controller.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;  
 import javax.faces.bean.ManagedBean;
@@ -16,9 +20,6 @@ import jee.wallet.model.ejb.UserEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
 import jee.wallet.model.entities.User;
-import jee.wallet.model.forms.Form;
-import jee.wallet.model.forms.LoginForm;
-  
 /**
  *
  * @author David
@@ -28,7 +29,6 @@ import jee.wallet.model.forms.LoginForm;
 public class LoginBean implements Serializable {
     
     private static final String REQUEST_NOTICE = "notice";
-    private static final String REQUEST_FORM = "form";
     private static final String REDIRECT_ADMIN_URL = "/admin.xhtml";
     private static final String REDIRECT_USER_URL = "/wallet.xhtml";
     private static final String LOGIN_URL = "/login.xhtml";
@@ -59,17 +59,28 @@ public class LoginBean implements Serializable {
     }
     
     public void connect() throws IOException {
-        System.out.println(userName+" "+password);
-        
+        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "ici{0} {1}", new Object[]{userName, password});
+    
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
-        
-        Form<User> form = new LoginForm();
 
-        User user = form.validateForm(request);
+        Logger.getLogger(this.getClass().getName()).info("before login");
+        User user = null;
+        try {
+            user = userEjb.login(userName, password);
+        } catch (UnsupportedEncodingException e) {
+            
+        } catch (NoSuchAlgorithmException e) {
+            
+        }
 
-        if (user != null && form.isValid()) {
+        Logger.getLogger(this.getClass().getName()).info("after login");
+ 
+        System.out.println(user);
+
+        Logger.getLogger(this.getClass().getName()).info("before valid");
+        if (user != null) {
             HttpSession session = request.getSession(true);
             user.setLastConnection(new Date());
             userEjb.update(user);
@@ -82,8 +93,8 @@ public class LoginBean implements Serializable {
                 response.sendRedirect(request.getContextPath() + REDIRECT_USER_URL);
             }
         } else {
-            request.setAttribute(REQUEST_FORM, form);
             response.sendRedirect(request.getContextPath() + LOGIN_URL);
         }
+        System.out.println("after Valid");
     }
 }

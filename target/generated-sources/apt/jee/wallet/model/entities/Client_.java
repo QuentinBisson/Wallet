@@ -7,7 +7,7 @@ import jee.wallet.model.entities.ClientStatusType;
 import jee.wallet.model.entities.ClientType;
 import jee.wallet.model.entities.Wallet;
 
-@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-11T20:26:16")
+@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-12T18:57:22")
 @StaticMetamodel(Client.class)
 public class Client_ extends User_ {
 

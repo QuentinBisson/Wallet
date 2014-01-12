@@ -31,9 +31,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet must be not null.");
         }
-        if (wallet.getClient() == null) {
-            throw new IllegalStateException("The wallet is in an invalid state.");
-        }
+
         if (em.contains(wallet)) {
             throw new IllegalStateException("The wallet is in an invalid state.");
         }
@@ -66,13 +64,6 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     private Query createSearchQuery(String prefix, Wallet wallet) {
         Map<String, Object> params = new HashMap<String, Object>();
         StringBuilder sb = new StringBuilder(prefix);
-        String separator = " WHERE ";
-        if (wallet != null) {
-            if (wallet.getClient() != null) {
-                sb.append(separator).append("w.client.id = :clientid");
-                params.put("clientid", wallet.getClient().getId());
-            }
-        }
 
         Query q = em.createQuery(sb.toString());
         setParameters(q, params);
@@ -98,9 +89,6 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     public void update(Wallet wallet) {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet must be not null.");
-        }
-        if (wallet.getClient() == null) {
-            throw new IllegalStateException("The wallet is in an invalid state.");
         }
         if (em.contains(wallet)) {
             throw new IllegalStateException("The wallet is in an invalid state.");

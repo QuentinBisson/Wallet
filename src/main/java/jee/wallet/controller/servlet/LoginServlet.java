@@ -4,8 +4,6 @@ import jee.wallet.model.ejb.UserEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
 import jee.wallet.model.entities.User;
-import jee.wallet.model.forms.Form;
-import jee.wallet.model.forms.LoginForm;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -13,11 +11,6 @@ import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Date;
 
 @WebServlet(value = "/login",name = "LoginServlet")
 @ServletSecurity(
@@ -25,7 +18,7 @@ import java.util.Date;
                 ServletSecurity.TransportGuarantee.CONFIDENTIAL))
 public class LoginServlet extends HttpServlet {
 
-    private static final String REQUEST_NOTICE = "notice";
+    /*private static final String REQUEST_NOTICE = "notice";
     private static final String VIEW = "/WEB-INF/jsp/login.jsp";
     private static final String INDEX_VIEW = "/WEB-INF/jsp/index.jsp";
     private static final String REDIRECT_ADMIN_URL = "/admin";
@@ -68,5 +61,5 @@ public class LoginServlet extends HttpServlet {
             this.getServletContext().getRequestDispatcher(INDEX_VIEW).forward(request, response);
         }
         processRequest(request, response);
-    }
+    }*/
 }
