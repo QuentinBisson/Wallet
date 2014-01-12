@@ -24,15 +24,15 @@ public class LoginForm extends AbstractForm<User> {
         if (StringUtils.isNotBlank(username)) {
             request.setAttribute(USERNAME_ATTR, username);
         } else {
-            setResult("Echec: Le login est invalide.");
-            addError(USERNAME_ATTR, "Le formulaire soumis est invalide.");
+            setResult("Le formulaire soumis est invalide.");
+            addError(USERNAME_ATTR, "Le login est invalide.");
             return null;
         }
         if (StringUtils.isNotBlank(password)) {
             request.setAttribute(PASSWORD_ATTR, password);
         } else {
-            setResult("Echec: Le mot de passe est invalide.");
-            addError(PASSWORD_ATTR, "Le formulaire soumis est invalide.");
+            setResult("Le formulaire soumis est invalide.");
+            addError(PASSWORD_ATTR, "Le mot de passe  est invalide.");
             return null;
         }
         User user = null;
@@ -46,6 +46,8 @@ public class LoginForm extends AbstractForm<User> {
 
         if (user == null) {
             setResult("Echec: Le couple login / mot de passe n'existe pas.");
+        } else {
+            setResult("OK");
         }
         return user;
     }

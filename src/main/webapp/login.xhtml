@@ -9,24 +9,18 @@
         <h:head>
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
-                <title>Connection</title>
+                <title>Log in</title>
             </f:facet>
         </h:head>
 
         <h:body>
-            <h:form>
-                <p:panel id="panel" header="Connection" style="margin-bottom:10px;">  
-                    <p:messages id="messages" />  
-                    <h:panelGrid columns="3">  
-                        <h:outputLabel for="username" value="Identifiant:" />
-                        <p:inputText value="#{loginBean.userName}" id="username"/> <br/>
-                        <h:outputLabel for="password" value="Mot de passe : "/>
-                        <p:password value="#{loginBean.password}" id="password"/> <br/>
-                    </h:panelGrid>
-                    <br/>
-                    <p:commandButton value="Connection" ajax="false" actionListener="#{loginBean.connect}" styleClass="ui-priority-primary" type="submit"/>  
-                </p:panel>
-            </h:form>
+            <ui:include src="/WEB-INF/header.xhtml" />
+            
+            <h:outputText class="result" value="#{requestScope['form'].result}" />
+            
+            <ui:include src="/WEB-INF/login/loginform.xhtml" />
+            
+            <ui:include src="/WEB-INF/footer.xhtml" />
         </h:body>
 
     </f:view>

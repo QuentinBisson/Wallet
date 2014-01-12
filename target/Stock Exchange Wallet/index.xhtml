@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Home</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <ui:include src="/WEB-INF/header.xhtml" />
+            <section class="content">
+                <ui:repeat value="#{bean.exchanges}" var="exchange" >
+                    <section class="exchange">
+                    <table>
+                        <thead>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Sector</th>
+                            <th>Creation Date</th>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{exchange.companies}" var="company" >
+                                <tr>
+                                    <td>#{company.code}</td>
+                                    <td>#{company.name}</td>
+                                    <td>#{company.sector}</td>
+                                    <td>#{company.creationDate}</td>
+                                </tr> 
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </section>
+                </ui:repeat>
+            </section>
+           <ui:include src="/WEB-INF/footer.xhtml" />
+        </h:body>
+    </f:view>
+</html>
+
+

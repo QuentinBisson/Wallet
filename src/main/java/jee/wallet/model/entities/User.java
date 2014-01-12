@@ -6,20 +6,21 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name="WALLET_USER")
 public abstract class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id = null;
+    protected Long id = null;
     @Column
-    private String username;
+    protected String username;
     @Column
-    private String password;
+    protected String password;
     @Transient
-    private String confirmationPassword;
+    protected String confirmationPassword;
     @Temporal(TemporalType.DATE)
-    private Date lastConnection;
+    protected Date lastConnection;
 
     public Long getId() {
         return this.id;

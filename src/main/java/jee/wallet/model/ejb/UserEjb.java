@@ -13,9 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.LocalBean;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@LocalBean
 public class UserEjb extends AbstractEjb implements UserEjbInterface {
 
     private static final String SELECT_BY_ID = "SELECT u FROM User u WHERE u.id=:id";
@@ -153,6 +154,7 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User login(String username, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         Map<String, Object> params = new HashMap<String, Object>();

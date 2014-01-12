@@ -5,11 +5,7 @@ import java.io.Serializable;
 
 @Entity
 public class Client extends User implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id = null;
+    
     @Column
     private String firstName;
     @Column
@@ -20,14 +16,6 @@ public class Client extends User implements Serializable {
     private ClientStatusType status;
     @OneToOne
     private Wallet wallet;
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return this.firstName;
@@ -80,16 +68,16 @@ public class Client extends User implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        if (id != null) {
-            return id.equals(((Client) that).id);
+        if (getId() != null) {
+            return getId().equals(((Client) that).getId());
         }
         return super.equals(that);
     }
 
     @Override
     public int hashCode() {
-        if (id != null) {
-            return id.hashCode();
+        if (getId() != null) {
+            return getId().hashCode();
         }
         return super.hashCode();
     }

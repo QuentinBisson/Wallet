@@ -1,0 +1,21 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <h:form>
+        <p:panel id="panel" header="Log in" style="margin-bottom:10px;">  
+            <p:messages id="messages" />  
+            <h:panelGrid columns="3">  
+                <h:outputLabel for="username" value="Identifiant:" />
+                <p:inputText value="#{loginBean.userName}" id="username"/> <br/>
+                <h:outputLabel for="password" value="Mot de passe : "/>
+                <p:password value="#{loginBean.password}" id="password"/> <br/>
+            </h:panelGrid>
+            <br/>
+            <p:commandButton value="Log in" ajax="false" actionListener="#{loginBean.connect}" styleClass="ui-priority-primary" type="submit"/>  
+        </p:panel>
+    </h:form>
+</ui:composition>
