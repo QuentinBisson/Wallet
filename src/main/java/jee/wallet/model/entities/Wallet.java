@@ -14,8 +14,8 @@ public class Wallet implements Serializable {
     private Long id = null;
     @Column
     private Double balance;
-    @OneToOne
-    private Client client;
+    /*@OneToOne
+    private Client client;*/
     @OneToMany
     private List<Transaction> transactions;
 
@@ -39,13 +39,13 @@ public class Wallet implements Serializable {
         this.balance = balance;
     }
 
-    public Client getClient() {
+    /*public Client getClient() {
         return this.client;
     }
 
     public void setClient(final Client client) {
         this.client = client;
-    }
+    }*/
 
     public List<Transaction> getTransactions() {
         return transactions;

@@ -35,7 +35,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         }
         Wallet wallet = new Wallet();
         client.setWallet(wallet);
-        wallet.setClient(client);
+        //wallet.setClient(client);
 
         try {
             UserEjb.hashPassword(client);
