@@ -14,9 +14,9 @@ public class StockExchange implements Serializable {
     private Long id = null;
     @Column
     private String name;
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private List<Company> companies;
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     private List<StockOption> options;
 
     public StockExchange() {

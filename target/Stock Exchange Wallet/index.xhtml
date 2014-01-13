@@ -15,28 +15,60 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
+            
+            <f:event type="preRenderView" listener="#{homeBean.init}" />
+            
             <section class="content">
-                <ui:repeat value="#{bean.exchanges}" var="exchange" >
+                <ui:repeat value="#{homeBean.exchanges}" var="key" >
                     <section class="exchange">
-                    <table>
-                        <thead>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Sector</th>
-                            <th>Creation Date</th>
-                        </thead>
-                        <tbody>
-                            <ui:repeat value="#{exchange.companies}" var="company" >
-                                <tr>
-                                    <td>#{company.code}</td>
-                                    <td>#{company.name}</td>
-                                    <td>#{company.sector}</td>
-                                    <td>#{company.creationDate}</td>
-                                </tr> 
-                            </ui:repeat>
-                        </tbody>
-                    </table>
-                </section>
+                        <p:dataTable var="company" value="#{homeBean.companies[key]}" 
+                            paginator="true" rows="20"  
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                            rowsPerPageTemplate="20,30,40" lazy="true">  
+                        
+                            <f:facet name="header">  
+                                <h2>#{key.name}</h2>  
+                            </f:facet>  
+  
+                            <p:column headerText="Symbol">  
+                                <h:outputText value="#{company.code}" />  
+                            </p:column>  
+  
+                            <p:column headerText="Name">  
+                                <h:outputText value="#{company.name}" />  
+                            </p:column>
+  
+                            <p:column headerText="Sector">  
+                                <h:outputText value="#{company.sector}" />  
+                            </p:column>                             
+                            
+                            <p:column headerText="Last Sale">  
+                                <h:outputText value="#{company.lastSale}" />  
+                            </p:column>  
+                            
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Capital" />  
+                                </f:facet>  
+                                <h:outputText value="#{company.marketCap}" />  
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="IPO Year" />  
+                                </f:facet>  
+                                <h:outputText value="#{company.ipoYear}" />  
+                            </p:column>
+                            
+                             <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Industry" />  
+                                </f:facet>  
+                                <h:outputText value="#{company.industry}" />  
+                            </p:column>
+                            
+                        </p:dataTable>
+                    </section>
                 </ui:repeat>
             </section>
            <ui:include src="/WEB-INF/footer.xhtml" />

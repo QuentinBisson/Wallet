@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import jee.wallet.model.entities.Transaction;
 
-@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-12T18:57:22")
+@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-13T03:19:03")
 @StaticMetamodel(Wallet.class)
 public class Wallet_ { 
 

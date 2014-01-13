@@ -13,8 +13,10 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.LocalBean;
 
 @Stateless
+@LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     @EJB
@@ -31,7 +33,6 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet must be not null.");
         }
-
         if (em.contains(wallet)) {
             throw new IllegalStateException("The wallet is in an invalid state.");
         }

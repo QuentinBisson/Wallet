@@ -10,8 +10,10 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.LocalBean;
 
 @Stateless
+@LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class TransactionEjb extends AbstractEjb implements CrudInterface<Transaction> {
     @EJB

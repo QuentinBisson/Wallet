@@ -7,7 +7,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.StockOption;
 
-@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-12T18:57:22")
+@Generated(value="EclipseLink-2.4.0.v20120608-rNA", date="2014-01-13T03:19:02")
 @StaticMetamodel(StockExchange.class)
 public class StockExchange_ { 
 

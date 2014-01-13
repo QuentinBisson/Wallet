@@ -1,5 +1,12 @@
 package jee.wallet.model.ejb;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.History;
 import jee.wallet.model.entities.StockExchange;
@@ -13,11 +20,18 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.LocalBean;
+import org.apache.commons.io.FileUtils;
 
 @Stateless
+@LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
 
+    private static final String HISTORY_URL = "http://ichart.finance.yahoo.com/table.csv?s=";
+    
     @EJB
     private HistoryEjb historyEjb;
     @EJB
@@ -77,7 +91,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
                 separator = "";
                 for (StockExchange se : company.getStockExchanges()) {
                     int i = 0;
-                    sb.append(separator).append("se.id = :seid" + i);
+                    sb.append(separator).append("se.id = :seid").append(i);
                     params.put("seid" + i, se.getId());
                     separator = " OR ";
                 }
@@ -159,7 +173,33 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
     }
 
     @Override
-    public History getRealTimeValue(Company company) {
+    public List<History> getRealTimeValue(Company company) {
+        try {
+            String str = HISTORY_URL + company.getCode();
+            
+            URL url = new URL(str);
+            File temp = File.createTempFile("tmp-exchange", ".tmp");
+            FileUtils.copyURLToFile(url, temp);
+            
+            InputStream in = new FileInputStream(temp);
+            BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+            
+            company.getHistory().clear();
+            String line = buf.readLine();
+            while((line = buf.readLine()) != null) {
+                History history = new History(line);
+                history.setCompany(company);
+                company.getHistory().add(history);
+            }
+            
+            buf.close();
+            temp.deleteOnExit();
+            em.persist(company);
+            em.flush();
+            return company.getHistory();
+        } catch (IOException ex) {
+            Logger.getLogger(CompanyEjb.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 }

@@ -1,5 +1,13 @@
 package jee.wallet.model.ejb;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import jee.wallet.model.entities.StockExchange;
 import org.apache.commons.lang.StringUtils;
 
@@ -11,11 +19,20 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.LocalBean;
+import jee.wallet.model.entities.Company;
+import org.apache.commons.io.FileUtils;
 
 @Stateless
+@LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class StockExchangeEjb extends AbstractEjb
-        implements CrudInterface<StockExchange> {
+        implements StockExchangeEjbInterface {
+    
+    private static final String EXCHANGE_URL = "http://www.nasdaq.com/screening/companies-by-industry.aspx?letter=0&render=download&exchange=";
+
     @EJB
     private CompanyEjb companyEjb;
     @EJB
@@ -38,7 +55,6 @@ public class StockExchangeEjb extends AbstractEjb
         em.flush();
     }
 
-
     @Override
     public StockExchange findById(long id) {
         return (StockExchange) em.createQuery(SELECT_BY_ID)
@@ -49,9 +65,9 @@ public class StockExchangeEjb extends AbstractEjb
     @Override
     public List<StockExchange> findAll(int offset, int limit) {
         return (List<StockExchange>) em.createQuery(SELECT_ALL)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
     }
 
     @Override
@@ -126,6 +142,32 @@ public class StockExchangeEjb extends AbstractEjb
             throw new IllegalArgumentException("The stock exchange does not exist.");
         }
         em.remove(stockExchange);
+        em.flush();
+    }
+
+    public void realTimeUpdate() throws MalformedURLException, IOException {
+        for (StockExchange se : findAll(0, Integer.MAX_VALUE)) {
+            URL url = new URL(EXCHANGE_URL + se.getName());
+            File temp = File.createTempFile("tmp-exchange", ".tmp");
+            FileUtils.copyURLToFile(url, temp);
+            
+            InputStream in = new FileInputStream(temp);
+            BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+            String line;
+            
+            se.getCompanies().clear();
+            
+            line = buf.readLine();
+            while ((line = buf.readLine()) != null) {
+                if (StringUtils.isNotBlank(line)) {
+                   Company company = new Company(line);
+                   se.getCompanies().add(company);
+                }   
+            }
+            buf.close();
+            temp.deleteOnExit();  
+            em.persist(se);
+        }
         em.flush();
     }
 }

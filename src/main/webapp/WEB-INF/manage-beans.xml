@@ -9,4 +9,9 @@
 	  <managed-bean-class>jee.wallet.controller.bean.LoginBean</managed-bean-class>
 	  <managed-bean-scope>request</managed-bean-scope>
      </managed-bean>
+     <managed-bean>
+	  <managed-bean-name>homeBean</managed-bean-name>
+	  <managed-bean-class>jee.wallet.controller.bean.HomeBean</managed-bean-class>
+	  <managed-bean-scope>request</managed-bean-scope>
+     </managed-bean>
 </faces-config>

@@ -1,8 +1,6 @@
 package jee.wallet.model.ejb;
 
-import javax.ejb.Remote;
 import java.util.List;
-
 
 public interface CrudInterface<E> {
 

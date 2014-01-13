@@ -23,16 +23,16 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
     private static final String SELECT_ALL = "SELECT u FROM User u";
     private static final String COUNT_ALL = "SELECT COUNT(u) FROM User u";
 
-    private static String hashString(String s)  throws NoSuchAlgorithmException,
+    private static String hashString(String s) throws NoSuchAlgorithmException,
             UnsupportedEncodingException {
         MessageDigest digest = MessageDigest.getInstance("SHA-512");
         byte[] hash = digest.digest(s.getBytes("UTF-8"));
         return hash.toString();
     }
 
-    public static void hashPassword(User u)  throws NoSuchAlgorithmException,
+    public static void hashPassword(User u) throws NoSuchAlgorithmException,
             UnsupportedEncodingException {
-            String hash = hashString(u.getPassword());
+        String hash = hashString(u.getPassword());
         if (!StringUtils.equals(hash, u.getPassword())) {
             u.setPassword(hash);
         }
@@ -116,9 +116,9 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
         if (user == null) {
             throw new IllegalArgumentException("The user must be not null.");
         }
-        if (!em.contains(user)) {
+        /*if (!em.contains(user)) {
             throw new IllegalStateException("The user is in an invalid state.");
-        }
+        }*/
         User c = findById(user.getId());
         if (c == null) {
             throw new IllegalArgumentException("The user is invalid.");
@@ -159,22 +159,27 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         Map<String, Object> params = new HashMap<String, Object>();
         StringBuilder sb = new StringBuilder();
-
-            if (StringUtils.isNotBlank(username)) {
-                sb.append(" WHERE ").append("u.username = :username");
-                params.put(":username", username);
-            } else {
-                throw new IllegalArgumentException("Username can't be null");
-            }
-            if (StringUtils.isNotBlank(password)) {
-                sb.append(" AND ").append("u.password = :password");
-                params.put(":password", hashString(password));
-            } else {
-                throw new IllegalArgumentException("Password can't be null");
-            }
-
+        sb.append("SELECT u FROM User u");
+        if (StringUtils.isNotBlank(username)) {
+            sb.append(" WHERE ").append("u.username = :username ");
+            params.put("username", username);
+        } else {
+            throw new IllegalArgumentException("Username can't be null");
+        }
+        if (StringUtils.isNotBlank(password)) {
+            sb.append(" AND ").append("u.password = :password ");
+            params.put("password", password);
+        } else {
+            throw new IllegalArgumentException("Password can't be null");
+        }
+        System.out.println("sb = " + sb);
         Query q = em.createQuery(sb.toString());
+        System.out.println("query " + q.toString());
         setParameters(q, params);
-        return (User) q.getSingleResult();
+        try {
+            return (User) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

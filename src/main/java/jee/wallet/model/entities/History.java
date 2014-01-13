@@ -2,7 +2,11 @@ package jee.wallet.model.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Entity
 public class History implements Serializable {
@@ -12,10 +16,42 @@ public class History implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id = null;
     @Temporal(TemporalType.DATE)
+    @Column(name="history_date")
     private Date date;
+    @Column
+    private Float open;
+    @Column
+    private Float high;
+    @Column
+    private Float low;
+    @Column
+    private Float close;
+    @Column
+    private Long volume;
+    @Column
+    private Float adjClose;
     @ManyToOne
     private Company company;
 
+    public History() {		
+    }
+	
+    public History(String line) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String[] s = line.split(",");
+        try {
+            date = dateFormat.parse(s[0]);
+        } catch (java.text.ParseException ex) {
+            Logger.getLogger(History.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        open = Float.valueOf(s[1]);
+        high = Float.valueOf(s[2]);
+        low = Float.valueOf(s[3]);
+        close = Float.valueOf(s[4]);
+        volume = Long.valueOf(s[5]);
+        adjClose = Float.valueOf(s[6]);
+    }
+    
     public Long getId() {
         return this.id;
     }
@@ -38,6 +74,54 @@ public class History implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Float getOpen() {
+        return open;
+    }
+
+    public void setOpen(Float open) {
+        this.open = open;
+    }
+
+    public Float getHigh() {
+        return high;
+    }
+
+    public void setHigh(Float high) {
+        this.high = high;
+    }
+
+    public Float getLow() {
+        return low;
+    }
+
+    public void setLow(Float low) {
+        this.low = low;
+    }
+
+    public Float getClose() {
+        return close;
+    }
+
+    public void setClose(Float close) {
+        this.close = close;
+    }
+
+    public Long getVolume() {
+        return volume;
+    }
+
+    public void setVolume(Long volume) {
+        this.volume = volume;
+    }
+
+    public Float getAdjClose() {
+        return adjClose;
+    }
+
+    public void setAdjClose(Float adjClose) {
+        this.adjClose = adjClose;
     }
 
     @Override

@@ -1,10 +1,22 @@
 package jee.wallet.model.entities;
 
-import javax.persistence.*;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.apache.commons.lang.StringUtils;
 
 @Entity
 public class Company implements Serializable {
@@ -21,17 +33,65 @@ public class Company implements Serializable {
     private String sector;
     @Temporal(TemporalType.DATE)
     private Date creationDate;
+    @Column
+    private Float lastSale;
+    @Column
+    private Double marketCap;
+    @Column
+    private Long adrTso;
+    @Column
+    private Integer ipoYear;
+    @Column
+    private String industry;
+    @Column
+    private String summaryQuote;
     @OneToMany
     private List<History> history;
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private List<StockExchange> stockExchanges;
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     private List<StockOption> options;
 
     public Company() {
         history = new ArrayList<History>();
         options = new ArrayList<StockOption>();
         stockExchanges = new ArrayList<StockExchange>();
+    }
+
+    public Company(String line) {
+        history = new ArrayList<History>();
+        options = new ArrayList<StockOption>();
+        stockExchanges = new ArrayList<StockExchange>();
+    
+        List<String> i = Lists.newArrayList(
+                Splitter.on("\",\"").split(line));
+        
+        code = i.get(0).replaceAll("\"", "");
+        name = i.get(1);
+        
+        String tmp = i.get(2);
+        if (StringUtils.isNumeric(tmp)) {
+            lastSale = Float.valueOf(tmp);
+        }
+        
+        tmp = i.get(3);
+        if (StringUtils.isNumeric(tmp)) {
+            marketCap = Double.valueOf(tmp);
+        }
+        
+        tmp = i.get(4);
+        if (StringUtils.isNumeric(tmp)) {
+            adrTso = Long.valueOf(tmp);
+        }
+        
+        tmp = i.get(5);
+        if (StringUtils.isNumeric(tmp)) {
+            ipoYear = Integer.valueOf(tmp);
+        }
+        
+        sector = i.get(6);
+        industry = i.get(7);
+        summaryQuote = i.get(8).replaceAll("\",", "");
     }
 
     public Long getId() {
@@ -74,6 +134,54 @@ public class Company implements Serializable {
         this.creationDate = creationDate;
     }
 
+    public Float getLastSale() {
+        return lastSale;
+    }
+
+    public void setLastSale(Float lastSale) {
+        this.lastSale = lastSale;
+    }
+
+    public Double getMarketCap() {
+        return marketCap;
+    }
+
+    public void setMarketCap(Double marketCap) {
+        this.marketCap = marketCap;
+    }
+
+    public Long getAdrTso() {
+        return adrTso;
+    }
+
+    public void setAdrTso(Long adrTso) {
+        this.adrTso = adrTso;
+    }
+
+    public Integer getIpoYear() {
+        return ipoYear;
+    }
+
+    public void setIpoYear(Integer ipoYear) {
+        this.ipoYear = ipoYear;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getSummaryQuote() {
+        return summaryQuote;
+    }
+
+    public void setSummaryQuote(String summaryQuote) {
+        this.summaryQuote = summaryQuote;
+    }
+    
     public List<History> getHistory() {
         return this.history;
     }
