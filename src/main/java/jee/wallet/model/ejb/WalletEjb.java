@@ -33,6 +33,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet must be not null.");
         }
+        
         if (em.contains(wallet)) {
             throw new IllegalStateException("The wallet is in an invalid state.");
         }

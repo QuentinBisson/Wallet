@@ -35,7 +35,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         }
         Wallet wallet = new Wallet();
         client.setWallet(wallet);
-
+        
         try {
             UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {

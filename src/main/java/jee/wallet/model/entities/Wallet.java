@@ -14,6 +14,7 @@ public class Wallet implements Serializable {
     private Long id = null;
     @Column
     private Double balance;
+
     @OneToMany
     private List<Transaction> transactions;
 

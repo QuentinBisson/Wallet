@@ -15,6 +15,7 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
+<<<<<<< HEAD
             
             <f:event type="preRenderView" listener="#{homeBean.init}" />
             
@@ -69,6 +70,30 @@
                             
                         </p:dataTable>
                     </section>
+=======
+            <section class="content">
+                <ui:repeat value="#{bean.exchanges}" var="exchange" >
+                    <section class="exchange">
+                    <table>
+                        <thead>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Sector</th>
+                            <th>Creation Date</th>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{exchange.companies}" var="company" >
+                                <tr>
+                                    <td>#{company.code}</td>
+                                    <td>#{company.name}</td>
+                                    <td>#{company.sector}</td>
+                                    <td>#{company.creationDate}</td>
+                                </tr> 
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </section>
+>>>>>>> e0abdfead8e9eaa576f611737f586e2beefafc60
                 </ui:repeat>
             </section>
            <ui:include src="/WEB-INF/footer.xhtml" />
