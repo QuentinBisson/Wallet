@@ -18,21 +18,29 @@
 
             <section class="content">
                 <h:form>
-                    <h:panelGrid columns="2" cellpadding="10">  
+                    <h:panelGrid columns="2" cellpadding="10" style="float:left;">  
                         <p:outputLabel value="Veuillez choisir une bourse : " for="select_exchange"/>  
                         <p:selectOneMenu value="#{homeBean.selectedExchange}" id="select_exchange" > 
-                            <p:ajax  update="exchange"/>
+                            <p:ajax  update="exchange" process="@this,exchange"/>
                             <f:selectItems value="#{homeBean.exchanges}" var="ex" itemLabel="#{ex.name}" itemValue="#{ex.id}"/>
                         </p:selectOneMenu>  
                     </h:panelGrid>
 
+                    <p:ajaxStatus id="ajaxStatusPanel" style="float:left;">  
+                        <f:facet name="start">  
+                            <h:graphicImage value="img/ajaxloading.gif" width="50"/>  
+                        </f:facet>  
+
+                        <f:facet name="complete">  
+                            <h:outputText value="" />  
+                        </f:facet>  
+                    </p:ajaxStatus> 
+
                     <section class="exchange" >
-                        <p:dataTable var="company" value="#{homeBean.companies}" 
+                        <p:dataTable var="company" value="#{homeBean.companies}" id="exchange"
                                      paginator="true" rows="20"  
                                      lazy="true"
-                                     paginatorPosition="bottom"
-                                     id="exchange"
-                                     rendered="#{homeBean.companies.rowCount == 0}">  
+                                     paginatorPosition="bottom">  
 
                             <p:column headerText="Symbol">  
                                 <h:outputText value="#{company.code}" />  

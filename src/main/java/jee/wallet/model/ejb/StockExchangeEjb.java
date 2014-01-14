@@ -170,7 +170,7 @@ public class StockExchangeEjb extends AbstractEjb
         }
         buf.close();
         temp.deleteOnExit();
-        em.persist(se);
+        em.merge(se);
 
         em.flush();
     }
