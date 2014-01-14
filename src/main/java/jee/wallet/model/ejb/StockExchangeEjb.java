@@ -30,7 +30,7 @@ import org.apache.commons.io.FileUtils;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class StockExchangeEjb extends AbstractEjb
         implements StockExchangeEjbInterface {
-    
+
     private static final String EXCHANGE_URL = "http://www.nasdaq.com/screening/companies-by-industry.aspx?letter=0&render=download&exchange=";
 
     @EJB
@@ -57,17 +57,21 @@ public class StockExchangeEjb extends AbstractEjb
 
     @Override
     public StockExchange findById(long id) {
-        return (StockExchange) em.createQuery(SELECT_BY_ID)
-                .setParameter("id", id)
-                .getSingleResult();
+        try {
+            return (StockExchange) em.createQuery(SELECT_BY_ID)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<StockExchange> findAll(int offset, int limit) {
         return (List<StockExchange>) em.createQuery(SELECT_ALL)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
-                    .getResultList();
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
@@ -145,29 +149,29 @@ public class StockExchangeEjb extends AbstractEjb
         em.flush();
     }
 
-    public void realTimeUpdate() throws MalformedURLException, IOException {
-        for (StockExchange se : findAll(0, Integer.MAX_VALUE)) {
-            URL url = new URL(EXCHANGE_URL + se.getName());
-            File temp = File.createTempFile("tmp-exchange", ".tmp");
-            FileUtils.copyURLToFile(url, temp);
-            
-            InputStream in = new FileInputStream(temp);
-            BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-            String line;
-            
-            se.getCompanies().clear();
-            
-            line = buf.readLine();
-            while ((line = buf.readLine()) != null) {
-                if (StringUtils.isNotBlank(line)) {
-                   Company company = new Company(line);
-                   se.getCompanies().add(company);
-                }   
+    public void realTimeUpdate(StockExchange se) throws MalformedURLException, IOException {
+
+        URL url = new URL(EXCHANGE_URL + se.getName());
+        File temp = File.createTempFile("tmp-exchange", ".tmp");
+        FileUtils.copyURLToFile(url, temp);
+
+        InputStream in = new FileInputStream(temp);
+        BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+        String line;
+
+        se.getCompanies().clear();
+
+        line = buf.readLine();
+        while ((line = buf.readLine()) != null) {
+            if (StringUtils.isNotBlank(line)) {
+                Company company = new Company(line);
+                se.getCompanies().add(company);
             }
-            buf.close();
-            temp.deleteOnExit();  
-            em.persist(se);
         }
+        buf.close();
+        temp.deleteOnExit();
+        em.persist(se);
+
         em.flush();
     }
 }

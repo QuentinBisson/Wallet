@@ -15,38 +15,41 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-<<<<<<< HEAD
-            
-            <f:event type="preRenderView" listener="#{homeBean.init}" />
-            
+
             <section class="content">
-                <ui:repeat value="#{homeBean.exchanges}" var="key" >
-                    <section class="exchange">
-                        <p:dataTable var="company" value="#{homeBean.companies[key]}" 
-                            paginator="true" rows="20"  
-                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                            rowsPerPageTemplate="20,30,40" lazy="true">  
-                        
-                            <f:facet name="header">  
-                                <h2>#{key.name}</h2>  
-                            </f:facet>  
-  
+                <h:form>
+                    <h:panelGrid columns="2" cellpadding="10">  
+                        <p:outputLabel value="Veuillez choisir une bourse : " for="select_exchange"/>  
+                        <p:selectOneMenu value="#{homeBean.selectedExchange}" id="select_exchange" > 
+                            <p:ajax  update="exchange"/>
+                            <f:selectItems value="#{homeBean.exchanges}" var="ex" itemLabel="#{ex.name}" itemValue="#{ex.id}"/>
+                        </p:selectOneMenu>  
+                    </h:panelGrid>
+
+                    <section class="exchange" >
+                        <p:dataTable var="company" value="#{homeBean.companies}" 
+                                     paginator="true" rows="20"  
+                                     lazy="true"
+                                     paginatorPosition="bottom"
+                                     id="exchange"
+                                     rendered="#{homeBean.companies.rowCount == 0}">  
+
                             <p:column headerText="Symbol">  
                                 <h:outputText value="#{company.code}" />  
                             </p:column>  
-  
+
                             <p:column headerText="Name">  
                                 <h:outputText value="#{company.name}" />  
                             </p:column>
-  
+
                             <p:column headerText="Sector">  
                                 <h:outputText value="#{company.sector}" />  
                             </p:column>                             
-                            
+
                             <p:column headerText="Last Sale">  
                                 <h:outputText value="#{company.lastSale}" />  
                             </p:column>  
-                            
+
                             <p:column>  
                                 <f:facet name="header">  
                                     <h:outputText value="Capital" />  
@@ -60,43 +63,19 @@
                                 </f:facet>  
                                 <h:outputText value="#{company.ipoYear}" />  
                             </p:column>
-                            
-                             <p:column>  
+
+                            <p:column>  
                                 <f:facet name="header">  
                                     <h:outputText value="Industry" />  
                                 </f:facet>  
                                 <h:outputText value="#{company.industry}" />  
                             </p:column>
-                            
+
                         </p:dataTable>
                     </section>
-=======
-            <section class="content">
-                <ui:repeat value="#{bean.exchanges}" var="exchange" >
-                    <section class="exchange">
-                    <table>
-                        <thead>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Sector</th>
-                            <th>Creation Date</th>
-                        </thead>
-                        <tbody>
-                            <ui:repeat value="#{exchange.companies}" var="company" >
-                                <tr>
-                                    <td>#{company.code}</td>
-                                    <td>#{company.name}</td>
-                                    <td>#{company.sector}</td>
-                                    <td>#{company.creationDate}</td>
-                                </tr> 
-                            </ui:repeat>
-                        </tbody>
-                    </table>
-                </section>
->>>>>>> e0abdfead8e9eaa576f611737f586e2beefafc60
-                </ui:repeat>
+                </h:form>
             </section>
-           <ui:include src="/WEB-INF/footer.xhtml" />
+            <ui:include src="/WEB-INF/footer.xhtml" />
         </h:body>
     </f:view>
 </html>

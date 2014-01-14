@@ -5,13 +5,10 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.validation.constraints.NotNull;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext; 
 import jee.wallet.model.ejb.UserEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
@@ -22,15 +19,14 @@ import jee.wallet.model.entities.User;
  * @author David
  */
 @ManagedBean(name = "loginBean", eager = true)
-@RequestScoped
+@SessionScoped
 public class LoginBean implements Serializable {
 
     private static final String REDIRECT_ADMIN_URL = "/Wallet/admin.xhtml";
     private static final String REDIRECT_USER_URL = "Wallet/wallet.xhtml";
-
-    @NotNull
+ 
     private String userName;
-    @NotNull
+    
     private String password;
 
     @EJB
