@@ -15,13 +15,13 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-
+            <f:event type="preRenderView" listener="#{homeBean.init}" />
             <section class="content">
                 <h:form>
                     <h:panelGrid columns="2" cellpadding="10" style="float:left;">  
                         <p:outputLabel value="Veuillez choisir une bourse : " for="select_exchange"/>  
                         <p:selectOneMenu value="#{homeBean.selectedExchange}" id="select_exchange" > 
-                            <p:ajax  update="exchange" process="@this,exchange"/>
+                            <p:ajax  update="exchange" listener="#{homeBean.ajaxListener}"/>
                             <f:selectItems value="#{homeBean.exchanges}" var="ex" itemLabel="#{ex.name}" itemValue="#{ex.id}"/>
                         </p:selectOneMenu>  
                     </h:panelGrid>

@@ -2,19 +2,18 @@ package jee.wallet.controller.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.StockExchangeEjb;
-import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.StockExchange;
 
 @ManagedBean(name = "homeBean", eager = true)
-@ViewScoped
+@SessionScoped
 public class HomeBean implements Serializable {
 
     @EJB
@@ -22,7 +21,26 @@ public class HomeBean implements Serializable {
     //private Map<StockExchange, LazyDataModel<Company>> companies;
     private List<StockExchange> exchanges;
     private long selectedExchange;
-
+    private LazyExchangeModel companies;
+    
+    public void init() {
+        if (!FacesContext.getCurrentInstance()
+                .getPartialViewContext().isAjaxRequest()) {
+            try {
+                exchangeEjb.realTimeUpdate();
+            } catch (IOException ex1) {
+                Logger.getLogger(HomeBean.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        
+        System.out.println("selected " + selectedExchange);
+        System.out.println("companies "+companies);
+        exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
+        StockExchange ex = exchangeEjb.findById(selectedExchange);
+        if (ex != null) {
+            companies = new LazyExchangeModel(ex.getCompanies());
+        }
+    }
     /*public void init() {
      if (!FacesContext.getCurrentInstance().
      getPartialViewContext().isAjaxRequest()) {  
@@ -44,7 +62,7 @@ public class HomeBean implements Serializable {
      }*/
     public List<StockExchange> getExchanges() {
         if (exchanges == null) {
-            exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);;
+            exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
         }
         return exchanges;
     }
@@ -58,16 +76,16 @@ public class HomeBean implements Serializable {
     }
 
     public LazyExchangeModel getCompanies() {
+        return companies;
+    }
+
+    public void ajaxListener() {
+        System.out.println("je suis la !");
+        System.out.println("selected " + selectedExchange);
         StockExchange ex = exchangeEjb.findById(selectedExchange);
         if (ex != null) {
-            try {
-                exchangeEjb.realTimeUpdate(ex);
-            } catch (IOException ex1) {
-                Logger.getLogger(HomeBean.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            return new LazyExchangeModel(ex.getCompanies());
+            companies = new LazyExchangeModel(ex.getCompanies());
         }
-        return null;
     }
 
 }

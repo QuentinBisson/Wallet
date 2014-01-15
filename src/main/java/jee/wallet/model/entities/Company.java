@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 
 @Entity
@@ -70,22 +71,22 @@ public class Company implements Serializable {
         name = i.get(1);
         
         String tmp = i.get(2);
-        if (StringUtils.isNumeric(tmp)) {
+        if (NumberUtils.isNumber(tmp)) {
             lastSale = Float.valueOf(tmp);
         }
         
         tmp = i.get(3);
-        if (StringUtils.isNumeric(tmp)) {
+        if (NumberUtils.isNumber(tmp)) {
             marketCap = Double.valueOf(tmp);
         }
         
         tmp = i.get(4);
-        if (StringUtils.isNumeric(tmp)) {
+        if (NumberUtils.isNumber(tmp)) {
             adrTso = Long.valueOf(tmp);
         }
         
         tmp = i.get(5);
-        if (StringUtils.isNumeric(tmp)) {
+        if (NumberUtils.isNumber(tmp)) {
             ipoYear = Integer.valueOf(tmp);
         }
         

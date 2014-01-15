@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import jee.wallet.model.entities.StockExchange;
 import org.apache.commons.lang.StringUtils;
@@ -19,11 +21,10 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.LocalBean;
 import jee.wallet.model.entities.Company;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.persistence.internal.oxm.conversion.Base64;
 
 @Stateless
 @LocalBean
@@ -149,29 +150,30 @@ public class StockExchangeEjb extends AbstractEjb
         em.flush();
     }
 
-    public void realTimeUpdate(StockExchange se) throws MalformedURLException, IOException {
+    public void realTimeUpdate() throws MalformedURLException, IOException {
+        for (StockExchange se : findAll(0, Integer.MAX_VALUE)) {
+            URL url = new URL(EXCHANGE_URL + se.getName());
+            File temp = File.createTempFile("tmp-exchange", ".tmp");
+            FileUtils.copyURLToFile(url, temp);
 
-        URL url = new URL(EXCHANGE_URL + se.getName());
-        File temp = File.createTempFile("tmp-exchange", ".tmp");
-        FileUtils.copyURLToFile(url, temp);
+            InputStream in = new FileInputStream(temp);
+            BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+            String line;
 
-        InputStream in = new FileInputStream(temp);
-        BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-        String line;
+            se.getCompanies().clear();
 
-        se.getCompanies().clear();
-
-        line = buf.readLine();
-        while ((line = buf.readLine()) != null) {
-            if (StringUtils.isNotBlank(line)) {
-                Company company = new Company(line);
-                se.getCompanies().add(company);
+            line = buf.readLine();
+            while ((line = buf.readLine()) != null) {
+                if (StringUtils.isNotBlank(line)) {
+                    Company company = new Company(line);
+                    se.getCompanies().add(company);
+                }
             }
-        }
-        buf.close();
-        temp.deleteOnExit();
-        em.merge(se);
+            buf.close();
+            temp.deleteOnExit();
+            em.merge(se);
 
-        em.flush();
+            em.flush();
+        }
     }
 }
