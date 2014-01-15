@@ -2,7 +2,9 @@ package jee.wallet.controller.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -10,9 +12,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.StockExchangeEjb;
+import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.StockExchange;
 
-@ManagedBean(name = "homeBean", eager = true)
+@ManagedBean(name = "homeBean")
 @SessionScoped
 public class HomeBean implements Serializable {
 
@@ -21,9 +24,13 @@ public class HomeBean implements Serializable {
     //private Map<StockExchange, LazyDataModel<Company>> companies;
     private List<StockExchange> exchanges;
     private long selectedExchange;
-    private LazyExchangeModel companies;
+    private Map<String,LazyExchangeModel> companies;
     
-    public void init() {
+    public HomeBean(){
+        System.out.println("test");
+        companies = new HashMap<String, LazyExchangeModel>();
+    }
+   public void init() {
         if (!FacesContext.getCurrentInstance()
                 .getPartialViewContext().isAjaxRequest()) {
             try {
@@ -33,12 +40,9 @@ public class HomeBean implements Serializable {
             }
         }
         
-        System.out.println("selected " + selectedExchange);
-        System.out.println("companies "+companies);
         exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
-        StockExchange ex = exchangeEjb.findById(selectedExchange);
-        if (ex != null) {
-            companies = new LazyExchangeModel(ex.getCompanies());
+        for(StockExchange se : exchanges){
+            companies.put(se.getName(), new LazyExchangeModel(se.getCompanies()));
         }
     }
     /*public void init() {
@@ -75,17 +79,9 @@ public class HomeBean implements Serializable {
         this.selectedExchange = selectedExchange;
     }
 
-    public LazyExchangeModel getCompanies() {
+    public Map<String, LazyExchangeModel> getCompanies() {
         return companies;
     }
 
-    public void ajaxListener() {
-        System.out.println("je suis la !");
-        System.out.println("selected " + selectedExchange);
-        StockExchange ex = exchangeEjb.findById(selectedExchange);
-        if (ex != null) {
-            companies = new LazyExchangeModel(ex.getCompanies());
-        }
-    }
 
 }

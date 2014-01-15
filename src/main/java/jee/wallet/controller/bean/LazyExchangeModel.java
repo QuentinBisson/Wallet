@@ -50,6 +50,7 @@ public class LazyExchangeModel extends LazyDataModel<Company> {
 
     @Override
     public List<Company> load(int first, int pageSize, List<SortMeta> multiSortMeta, Map<String, String> filters) {
+        System.out.println("kdjflkdsjflkjsdflk");
         return load(first, pageSize, "", SortOrder.UNSORTED, filters);
     }
 }
