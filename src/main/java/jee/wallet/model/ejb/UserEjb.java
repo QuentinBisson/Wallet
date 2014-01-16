@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
-import jee.wallet.model.entities.Client;
 
 @Stateless
 @LocalBean
@@ -124,15 +123,15 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
         if (c == null) {
             throw new IllegalArgumentException("The user is invalid.");
         }
-        try {
+        /*try {
             hashPassword(user);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
-        }
-
-        em.persist(user);
+        }*/
+        
+        em.merge(user);
         em.flush();
     }
 

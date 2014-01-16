@@ -17,7 +17,6 @@ import javax.ejb.LocalBean;
 
 @Stateless
 @LocalBean
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     @EJB
     private TransactionEjb transactionEjb;
@@ -100,7 +99,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
             throw new IllegalArgumentException("The wallet is invalid.");
         }
 
-        em.persist(wallet);
+        em.merge(wallet);
         em.flush();
     }
 

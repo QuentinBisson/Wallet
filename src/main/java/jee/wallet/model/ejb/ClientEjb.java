@@ -13,9 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.LocalBean;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@LocalBean
 public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @EJB
@@ -121,25 +122,30 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @Override
     public void update(Client client) {
+        System.out.println("Je suis ici");
         if (client == null) {
             throw new IllegalArgumentException("The client must be not null.");
         }
-        if (!em.contains(client)) {
+       /*if (!em.contains(client)) {
             throw new IllegalStateException("The client is in an invalid state.");
-        }
+        }*/
+        System.out.println("Je suis la");
         Client c = findById(client.getId());
         if (c == null) {
             throw new IllegalArgumentException("The client is invalid.");
         }
-        try {
+        System.out.println("Je suis icsdflsdki");
+        /*try {
             UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
-        }
+        }*/
 
-        em.persist(client);
+        System.out.println("client "+client.getUsername());
+        System.out.println("balance "+client.getWallet().getBalance());
+        em.merge(client);
         walletEjb.update(client.getWallet());
         em.flush();
     }

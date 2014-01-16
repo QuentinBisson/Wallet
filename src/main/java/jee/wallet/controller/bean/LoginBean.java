@@ -5,10 +5,13 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext; 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.UserEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
@@ -18,19 +21,29 @@ import jee.wallet.model.entities.User;
  *
  * @author David
  */
-@ManagedBean(name = "loginBean", eager = true)
+@ManagedBean(name = "loginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
 
-    private static final String REDIRECT_ADMIN_URL = "/Wallet/admin.xhtml";
-    private static final String REDIRECT_USER_URL = "Wallet/wallet.xhtml";
- 
-    private String userName;
-    
-    private String password;
+    private static final String REDIRECT_ADMIN_URL = "/Wallet/admin/admin.xhtml";
+    private static final String REDIRECT_USER_URL = "/Wallet/user/user.xhtml";
 
+    private String userName;
+    private String password;
     @EJB
     private UserEjb userEjb;
+
+    public LoginBean() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        if (externalContext.getSessionMap().containsKey("user")) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_ADMIN_URL);
+            } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     public String getUserName() {
         return userName;
@@ -51,11 +64,14 @@ public class LoginBean implements Serializable {
     public void connect() throws IOException {
         System.out.println(userName + " " + password);
         try {
+            System.out.println("username " + userName);
+            System.out.println("pass " + password);
             User user = userEjb.login(userName, password);
             System.out.println("USER " + user);
             if (user != null) {
-                user.setLastConnection(new Date());
-                userEjb.update(user);
+                FacesContext context = FacesContext.getCurrentInstance();
+                ExternalContext externalContext = context.getExternalContext();
+                externalContext.getSessionMap().put("user", user);
                 if (user instanceof Administrator) {
                     FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_ADMIN_URL);
                 } else if (user instanceof Client) {
@@ -69,4 +85,16 @@ public class LoginBean implements Serializable {
         }
         System.out.println("after Valid");
     }
+
+    public void logout() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        externalContext.getSessionMap().remove("user");
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("Wallet");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
