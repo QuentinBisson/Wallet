@@ -14,7 +14,7 @@ public class Client extends User implements Serializable {
     private ClientType type;
     @Enumerated
     private ClientStatusType status;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Wallet wallet;
 
     public String getFirstName() {

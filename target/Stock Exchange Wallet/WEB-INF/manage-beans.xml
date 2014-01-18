@@ -19,4 +19,9 @@
 	  <managed-bean-class>jee.wallet.controller.bean.UserBean</managed-bean-class>
 	  <managed-bean-scope>request</managed-bean-scope>
      </managed-bean>
+          <managed-bean>
+	  <managed-bean-name>registerBean</managed-bean-name>
+	  <managed-bean-class>jee.wallet.controller.bean.RegisterBean</managed-bean-class>
+	  <managed-bean-scope>request</managed-bean-scope>
+     </managed-bean>
 </faces-config>

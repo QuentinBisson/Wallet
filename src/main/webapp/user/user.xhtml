@@ -19,9 +19,15 @@
                 <h:form>
                     <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}€" id="balance"/> </h3>
                     <p:outputLabel value="Valeur :" for="value"/>
-                    <p:inputText value="#{userBean.balance}" id="value" />
+                    <p:inputText value="#{userBean.balance}" id="value" /> <br/> <br/>
                     <p:commandButton value="Crediter" actionListener="#{userBean.creditListener}" update="balance"/>
                     <p:commandButton value="Debiter" actionListener="#{userBean.debitListener}" update="balance"/>
+                </h:form>
+            </p:panel>
+            
+            <p:panel id="panel_2" header="Fermer son compte" style="margin-bottom:10px;">
+                <h:form>
+                    <p:commandButton value="Fermer son compte" actionListener="#{userBean.closeAccount()}" type="submit" styleClass="ui-priority-primary"/>
                 </h:form>
             </p:panel>
             <ui:include src="/WEB-INF/footer.xhtml" />

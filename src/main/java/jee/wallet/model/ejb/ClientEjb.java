@@ -35,9 +35,10 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
             throw new IllegalStateException("The client is in an invalid state.");
         }
         Wallet wallet = new Wallet();
+        wallet.setBalance(0d);
         client.setWallet(wallet);
         
-        try {
+        /*try {
             UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
@@ -50,7 +51,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         }
         if (client.getType() == null) {
             client.setType(ClientType.NORMAL);
-        }
+        }*/
         em.persist(client);
         walletEjb.create(wallet);
         em.flush();
@@ -164,6 +165,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         if (client == null) {
             throw new IllegalArgumentException("The client does not exist.");
         }
+        client = em.merge(client);
         em.remove(client);
         em.flush();
     }

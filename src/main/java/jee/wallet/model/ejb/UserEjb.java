@@ -17,6 +17,7 @@ import javax.ejb.LocalBean;
 
 @Stateless
 @LocalBean
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class UserEjb extends AbstractEjb implements UserEjbInterface {
 
     private static final String SELECT_BY_ID = "SELECT u FROM User u WHERE u.id=:id";

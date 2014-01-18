@@ -6,14 +6,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.StockExchangeEjb;
 import jee.wallet.model.entities.StockExchange;
 
-@ManagedBean(name = "homeBean")
-@ViewScoped
 public class HomeBean implements Serializable {
 
     @EJB

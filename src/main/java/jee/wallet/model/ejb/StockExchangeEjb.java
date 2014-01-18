@@ -6,9 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.Authenticator;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import jee.wallet.model.entities.StockExchange;
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +22,6 @@ import java.util.Map;
 import javax.ejb.LocalBean;
 import jee.wallet.model.entities.Company;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.persistence.internal.oxm.conversion.Base64;
 
 @Stateless
 @LocalBean

@@ -14,8 +14,9 @@
     <section class="menu">
         <h:form>
             <p:menubar>  
-                <p:menuitem value="index" url="index.xhtml"/>
+                <p:menuitem value="Index" url="index.xhtml"/>
                 <p:menuitem value="Log in" url="login.xhtml"/>
+                <p:menuitem value="Ouvrir un compte" url="register.xhtml"/>
                 <c:if test="#{user != null}">
                     <f:facet name="options" >  
                         <p:commandLink value="Logout(#{user.username})" actionListener="#{loginBean.logout}" action="#{loginBean.logout}"/> 

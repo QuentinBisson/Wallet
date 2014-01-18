@@ -10,22 +10,15 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.ClientEjb;
-import jee.wallet.model.ejb.UserEjb;
-import jee.wallet.model.ejb.WalletEjb;
 import jee.wallet.model.entities.Client;
 
 /**
  *
  * @author David
  */
-@ManagedBean(name = "userBean")
-@RequestScoped
 public class UserBean implements Serializable{
 
     private double balance;
@@ -58,6 +51,18 @@ public class UserBean implements Serializable{
         System.out.println("debit");
         user.getWallet().setBalance(user.getWallet().getBalance() - balance);
         clientEjb.update(user);
+    }
+    
+    public void closeAccount(){
+        clientEjb.delete(user);
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        externalContext.getSessionMap().remove("user");
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("Wallet");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public double getBalance() {

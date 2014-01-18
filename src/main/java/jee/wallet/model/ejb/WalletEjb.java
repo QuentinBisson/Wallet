@@ -117,6 +117,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet does not exist.");
         }
+        wallet = em.merge(wallet);
         em.remove(wallet);
         em.flush();
     }
