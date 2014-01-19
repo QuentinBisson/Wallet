@@ -15,8 +15,78 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-            Hello <h:outputText value="#{user.username}"/>
-            
+            <br/>
+            <h:form id="form">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+
+                <p:dataTable value="#{adminBean.clients}" var="client" editable="true">
+                    <p:ajax event="rowEdit" listener="#{adminBean.onEdit}" />  
+                    <p:ajax event="rowEditCancel" listener="#{adminBean.onCancel}" />  
+
+                    <p:column headerText="Identifiant" style="width:20%">
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{client.username}" /> 
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{client.username}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>  
+
+                    <p:column headerText="Nom" style="width:20%">  
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{client.lastName}" /> 
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{client.lastName}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>  
+
+                    <p:column headerText="Prénom" style="width:20%">  
+                         <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{client.firstName}" /> 
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{client.firstName}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column> 
+                    
+                    <p:column headerText="Privilégié" style="width:20%">  
+                         <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{client.type}" /> 
+                            </f:facet>  
+                            <f:facet name="input"> 
+                                <p:selectOneMenu value="#{client.type}" style="width:100%">
+                                    <f:selectItems value="#{adminBean.typeUser}" />
+                                </p:selectOneMenu>
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column> 
+
+                    <p:column headerText="Derniere connection" style="width:10%">  
+                        <h:outputText value="#{client.lastConnection}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </h:outputText>
+                    </p:column> 
+
+                    <p:column headerText="Solde du compte" style="width:3%">  
+                        <h:outputText value="#{client.wallet.balance}$" />  
+                    </p:column> 
+
+                    <p:column style="width:3%">  
+                        <p:rowEditor />  
+                    </p:column> 
+                    <p:column style="width:3%" headerText="Details">  
+                        <p:commandLink actionListener="#{adminBean.showDetail(client.id)}" value="Detail"></p:commandLink>
+                    </p:column> 
+                </p:dataTable>
+            </h:form>
             <ui:include src="/WEB-INF/footer.xhtml" />
         </h:body>
 

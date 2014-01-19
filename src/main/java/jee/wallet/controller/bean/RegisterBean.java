@@ -11,29 +11,28 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.ClientEjb;
 import jee.wallet.model.entities.Client;
-import jee.wallet.model.entities.ClientStatusType;
-import jee.wallet.model.entities.ClientType;
-import jee.wallet.model.entities.Wallet;
 
 /**
  *
  * @author David
  */
-public class RegisterBean implements Serializable{
+public class RegisterBean implements Serializable {
 
     private Client user;
     private String confirmPassword;
     @EJB
     private ClientEjb clientEjb;
-    
-    public RegisterBean(){
+
+    public RegisterBean() {
         user = new Client();
     }
-    
 
     public void register() {
-        clientEjb.create(user);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Succès de l'inscription !", ""));  
+        if (validate()) {
+            clientEjb.create(user);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succès de l'inscription !", ""));
+        }
+
     }
 
     public Client getUser() {
@@ -44,11 +43,21 @@ public class RegisterBean implements Serializable{
         this.user = user;
     }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+    private boolean validate() {
+        boolean valid = true;
+        if (!user.getConfirmationPassword().equals(user.getPassword())) {
+            valid = false;
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur de validation", "Les mots de passe ne sont pas identique"));
+        }
+        if (user.getUsername().isEmpty()) {
+            valid = false;
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur de validation", "L'identifiant ne peut être null"));
+        }
+        if (user.getPassword().isEmpty()) {
+            valid = false;
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur de validation", "Le mot de passe ne peut être null"));
+        }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
+        return valid;
     }
 }

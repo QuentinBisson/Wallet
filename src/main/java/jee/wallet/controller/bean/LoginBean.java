@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -56,16 +57,14 @@ public class LoginBean implements Serializable {
         this.password = password;
     }
 
-    public void connect() throws IOException {
-        System.out.println(userName + " " + password);
+    public void connect() {
         try {
-            System.out.println("username " + userName);
-            System.out.println("pass " + password);
             User user = userEjb.login(userName, password);
-            System.out.println("USER " + user);
             if (user != null) {
                 FacesContext context = FacesContext.getCurrentInstance();
                 ExternalContext externalContext = context.getExternalContext();
+                user.setLastConnection(new Date());
+                userEjb.update(user);
                 externalContext.getSessionMap().put("user", user);
                 if (user instanceof Administrator) {
                     FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_ADMIN_URL);
@@ -77,6 +76,8 @@ public class LoginBean implements Serializable {
             System.out.println("Oups");
         } catch (NoSuchAlgorithmException ex) {
             System.out.println("oups");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("after Valid");
     }
