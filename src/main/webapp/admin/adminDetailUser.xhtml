@@ -15,11 +15,24 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-            #{adminDetailUser.id}
             <br/>
-            <h:form id="form">
-               
-            </h:form>
+
+            <p:dataTable value="#{adminDetailUser.client.wallet.transactions}" var="transaction">
+                <p:column headerText="Date de la transaction">
+                    <h:outputLabel value="#{transaction.transactionDate}"/>
+                </p:column>
+                <p:column headerText="Type de transaction">
+                    <h:outputLabel value="#{transaction.type}"/>
+                </p:column>
+                <p:column headerText="Prix">
+                    <h:outputLabel value="#{transaction.price}"/>
+                </p:column>
+                <p:column headerText="Options">
+                    <p:dataList value="#{transaction.stockOptions}" var="option" type="ordered">  
+                        <h:outputLabel value="#{option.company.name}"/>
+                    </p:dataList>  
+                </p:column>
+            </p:dataTable>
             <ui:include src="/WEB-INF/footer.xhtml" />
         </h:body>
 

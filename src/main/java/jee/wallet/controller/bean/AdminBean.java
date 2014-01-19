@@ -72,7 +72,6 @@ public class AdminBean implements Serializable {
     
     public void showDetail(long id){
         try {
-            System.out.println("id "+id);
             FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet/admin/adminDetailUser.xhtml?id="+id);
         } catch (IOException ex) {
             Logger.getLogger(AdminBean.class.getName()).log(Level.SEVERE, null, ex);

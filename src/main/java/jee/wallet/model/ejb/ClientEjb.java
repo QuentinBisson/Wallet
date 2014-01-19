@@ -59,6 +59,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @Override
     public Client findById(long id) {
+        System.out.println("id : "+id);
         return (Client) em.createQuery(SELECT_BY_ID)
                 .setParameter("id", id)
                 .getSingleResult();
