@@ -21,13 +21,13 @@
                     <p:messages showDetail="true" autoUpdate="true" closable="true" id="msg"/>  
                     <h:panelGrid columns="2">  
                         <p:outputLabel for="login">Identifiant</p:outputLabel>
-                        <p:inputText id="login" value="#{registerBean.user.username}" required="true" size="20" maxlength="60" />
+                        <p:inputText id="login" value="#{registerBean.user.username}" size="20" maxlength="60" />
 
                         <p:outputLabel for="motdepasse">Mot de passe</p:outputLabel>
-                        <p:password id="motdepasse" value="#{registerBean.user.password}" required="true" size="20" maxlength="20" />
+                        <p:password id="motdepasse" value="#{registerBean.user.password}" size="20" maxlength="20" />
 
                         <p:outputLabel for="confirmation">Confirmation du mot de passe</p:outputLabel>
-                        <p:password id="confirmation" value="#{registerBean.confirmPassword}" required="true" size="20" maxlength="20" />
+                        <p:password id="confirmation" value="#{registerBean.user.confirmationPassword}" size="20" maxlength="20" />
 
                         <p:outputLabel for="firstName">Prenom</p:outputLabel>
                         <p:inputText id="firstName" value="#{registerBean.user.firstName}"  size="20" maxlength="20" />
