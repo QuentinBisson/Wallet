@@ -1,3 +1,13 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
 nbproject/private/
 build/
 nbbuild/
@@ -52,3 +62,5 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+target/
