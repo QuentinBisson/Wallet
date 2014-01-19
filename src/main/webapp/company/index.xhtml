@@ -21,8 +21,10 @@
             <f:event type="preRenderView" listener="#{companyBean.init}" />
             <section class="content">
                 <section class="company" >
+
+                    <p:lineChart id="linear" value="#{companyBean.historyChartModel}" legendPosition="e"  
+                                 title="#{companyBean.company.name} (#{companyBean.company.code})" zoom="true" xaxisAngle="-50"/>
                     <section>
-                        <h1>#{companyBean.company.name} (#{companyBean.company.code})</h1>
                         <p><span>Sector : </span><span>#{companyBean.company.sector}</span></p>
                         <p><span>Capital : </span><span>#{companyBean.company.marketCap}</span></p>
                         <p><span>IPO Year : </span><span>#{companyBean.company.ipoYear}</span></p>
@@ -30,39 +32,39 @@
                     </section>
                     <section class="history">
                         <p:dataTable var="history" value="#{companyBean.history}"
-                                    paginator="true" rows="20"  
-                                    paginatorPosition="bottom" >
-                           <p:column headerText="Date">  
-                               <h:outputText value="#{history.date}">
-                                   <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                               </h:outputText>
-                           </p:column>  
+                                     paginator="true" rows="20"  
+                                     paginatorPosition="bottom" >
+                            <p:column headerText="Date">  
+                                <h:outputText value="#{history.date}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>  
 
-                           <p:column headerText="Ouverture">  
-                               <h:outputText value="#{history.open}" />  
-                           </p:column>
+                            <p:column headerText="Ouverture">  
+                                <h:outputText value="#{history.open}" />  
+                            </p:column>
 
-                           <p:column headerText="High">  
-                               <h:outputText value="#{history.high}" />  
-                           </p:column>                             
+                            <p:column headerText="High">  
+                                <h:outputText value="#{history.high}" />  
+                            </p:column>                             
 
-                           <p:column headerText="Low">  
-                               <h:outputText value="#{history.low}" />  
-                           </p:column>  
+                            <p:column headerText="Low">  
+                                <h:outputText value="#{history.low}" />  
+                            </p:column>  
 
-                           <p:column headerText="Close">
-                               <h:outputText value="#{history.close}" />  
-                           </p:column>
+                            <p:column headerText="Close">
+                                <h:outputText value="#{history.close}" />  
+                            </p:column>
 
-                           <p:column headerText="Volume">
-                               <h:outputText value="#{history.volume}" />  
-                           </p:column>
+                            <p:column headerText="Volume">
+                                <h:outputText value="#{history.volume}" />  
+                            </p:column>
 
-                           <p:column headerText="Adj Close">
-                               <h:outputText value="#{history.adjClose}" />  
-                           </p:column>
+                            <p:column headerText="Adj Close">
+                                <h:outputText value="#{history.adjClose}" />  
+                            </p:column>
 
-                       </p:dataTable>
+                        </p:dataTable>
                     </section>
                 </section>
             </section>

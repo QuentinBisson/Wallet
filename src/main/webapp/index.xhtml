@@ -19,59 +19,59 @@
             <f:event type="preRenderView" listener="#{homeBean.init}" />
             <section class="content">
                 <section class="exchange" >
-                    
+
                     <h:form>
                         <p:accordionPanel dynamic="true">  
                             <c:forEach items="#{homeBean.exchanges}" var="item">
 
                                 <p:tab title="#{item.name}">
                                     <p:dataTable var="company" value="#{item.companies}"
-                                             paginator="true" rows="20"  
-                                             paginatorPosition="bottom" >  
-                                    <p:column headerText="Symbol">  
-                                        <h:outputText value="#{company.code}" />  
-                                    </p:column>  
+                                                 paginator="true" rows="20"  
+                                                 paginatorPosition="bottom" >  
+                                        <p:column headerText="Symbol">  
+                                            <h:outputText value="#{company.code}" />  
+                                        </p:column>  
 
-                                    <p:column headerText="Name">  
-                                        <h:outputText value="#{company.name}" />  
-                                    </p:column>
+                                        <p:column headerText="Name">  
+                                            <h:outputText value="#{company.name}" />  
+                                        </p:column>
 
-                                    <p:column headerText="Sector">  
-                                        <h:outputText value="#{company.sector}" />  
-                                    </p:column>                             
+                                        <p:column headerText="Sector">  
+                                            <h:outputText value="#{company.sector}" />  
+                                        </p:column>                             
 
-                                    <p:column headerText="Last Sale">  
-                                        <h:outputText value="#{company.lastSale}" />  
-                                    </p:column>  
+                                        <p:column headerText="Last Sale">  
+                                            <h:outputText value="#{company.lastSale}" />  
+                                        </p:column>  
 
-                                    <p:column>  
-                                        <f:facet name="header">  
-                                            <h:outputText value="Capital" />  
-                                        </f:facet>  
-                                        <h:outputText value="#{company.marketCap}" />  
-                                    </p:column>
+                                        <p:column>  
+                                            <f:facet name="header">  
+                                                <h:outputText value="Capital" />  
+                                            </f:facet>  
+                                            <h:outputText value="#{company.marketCap}" />  
+                                        </p:column>
 
-                                    <p:column>  
-                                        <f:facet name="header">  
-                                            <h:outputText value="IPO Year" />  
-                                        </f:facet>  
-                                        <h:outputText value="#{company.ipoYear}" />  
-                                    </p:column>
+                                        <p:column>  
+                                            <f:facet name="header">  
+                                                <h:outputText value="IPO Year" />  
+                                            </f:facet>  
+                                            <h:outputText value="#{company.ipoYear}" />  
+                                        </p:column>
 
-                                    <p:column>  
-                                        <f:facet name="header">  
-                                            <h:outputText value="Industry" />  
-                                        </f:facet>  
-                                        <h:outputText value="#{company.industry}" />  
-                                    </p:column>
+                                        <p:column>  
+                                            <f:facet name="header">  
+                                                <h:outputText value="Industry" />  
+                                            </f:facet>  
+                                            <h:outputText value="#{company.industry}" />  
+                                        </p:column>
 
-                                    <p:column>
-                                        <h:outputLink value="#{homeBean.companyLink}">
-                                            <f:param name="id" value="#{company.id}" />
-                                            <h:outputText value="Details" />
-                                        </h:outputLink>
-                                    </p:column>
-                                </p:dataTable>
+                                        <p:column>
+                                            <h:outputLink value="#{homeBean.companyLink}">
+                                                <f:param name="id" value="#{company.id}" />
+                                                <h:outputText value="Details" />
+                                            </h:outputLink>
+                                        </p:column>
+                                    </p:dataTable>
                                 </p:tab>
                             </c:forEach>
                         </p:accordionPanel>
