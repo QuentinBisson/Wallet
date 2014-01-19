@@ -152,18 +152,14 @@ public class StockExchangeEjb extends AbstractEjb
             URL url = new URL(EXCHANGE_URL + se.getName());
             File temp = File.createTempFile("tmp-exchange", ".tmp");
             FileUtils.copyURLToFile(url, temp);
-
             InputStream in = new FileInputStream(temp);
             BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-            String line;
-
             se.getCompanies().clear();
 
-            line = buf.readLine();
-            while ((line = buf.readLine()) != null) {
+           String line = buf.readLine();
+           while ((line = buf.readLine()) != null) {
                 if (StringUtils.isNotBlank(line)) {
-                    Company company = new Company(line);
-                    se.getCompanies().add(company);
+                    se.getCompanies().add(new Company(line));
                 }
             }
             buf.close();

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Home</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <ui:include src="/WEB-INF/header.xhtml" />
+            <br/>
+            <p:panel header="Inscription" >
+                <h:form >
+                    <p:messages showDetail="true" autoUpdate="true" closable="true" id="msg"/>  
+                    <h:panelGrid columns="2">  
+                        <p:outputLabel for="login">Identifiant</p:outputLabel>
+                        <p:inputText id="login" value="#{registerBean.user.username}" required="true" size="20" maxlength="60" />
+
+                        <p:outputLabel for="motdepasse">Mot de passe</p:outputLabel>
+                        <p:password id="motdepasse" value="#{registerBean.user.password}" required="true" size="20" maxlength="20" />
+
+                        <p:outputLabel for="confirmation">Confirmation du mot de passe</p:outputLabel>
+                        <p:password id="confirmation" value="#{registerBean.confirmPassword}" required="true" size="20" maxlength="20" />
+
+                        <p:outputLabel for="firstName">Prenom</p:outputLabel>
+                        <p:inputText id="firstName" value="#{registerBean.user.firstName}"  size="20" maxlength="20" />
+
+                        <p:outputLabel for="name">Nom</p:outputLabel>
+                        <p:inputText id="name" value="#{registerBean.user.lastName}"  size="20" maxlength="20" />
+                    </h:panelGrid>
+
+                    <p:commandButton value="Inscription" action="#{registerBean.register}" update="msg"/>
+                    <br />
+                </h:form> 
+            </p:panel>
+
+            <ui:include src="/WEB-INF/footer.xhtml" />
+        </h:body>
+    </f:view>
+</html>
+
+

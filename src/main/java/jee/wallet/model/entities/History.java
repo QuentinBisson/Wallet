@@ -18,17 +18,17 @@ public class History implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name="history_date")
     private Date date;
-    @Column
+    @Column(name = "history_open")
     private Float open;
-    @Column
+    @Column(name = "history_high")
     private Float high;
-    @Column
+    @Column(name="history_low")
     private Float low;
-    @Column
+    @Column(name="history_close")
     private Float close;
-    @Column
+    @Column(name="history_volume")
     private Long volume;
-    @Column
+    @Column(name="history_adjClose")
     private Float adjClose;
     @ManyToOne
     private Company company;
@@ -39,11 +39,13 @@ public class History implements Serializable {
     public History(String line) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String[] s = line.split(",");
+        
         try {
             date = dateFormat.parse(s[0]);
         } catch (java.text.ParseException ex) {
             Logger.getLogger(History.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         open = Float.valueOf(s[1]);
         high = Float.valueOf(s[2]);
         low = Float.valueOf(s[3]);

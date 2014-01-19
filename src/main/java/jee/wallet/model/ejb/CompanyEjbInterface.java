@@ -1,10 +1,11 @@
 package jee.wallet.model.ejb;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import jee.wallet.model.entities.Company;
-import jee.wallet.model.entities.History;
 
 public interface CompanyEjbInterface extends CrudInterface<Company> {
 
-    public List<History> getRealTimeValue(Company company);
+    public void realTimeUpdate(Company company)
+            throws MalformedURLException, IOException;
 }

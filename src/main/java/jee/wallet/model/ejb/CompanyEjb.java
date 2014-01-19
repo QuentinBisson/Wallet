@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.History;
@@ -20,8 +21,6 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.LocalBean;
 import org.apache.commons.io.FileUtils;
 
@@ -173,33 +172,28 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
     }
 
     @Override
-    public List<History> getRealTimeValue(Company company) {
-        try {
-            String str = HISTORY_URL + company.getCode();
-            
-            URL url = new URL(str);
-            File temp = File.createTempFile("tmp-exchange", ".tmp");
-            FileUtils.copyURLToFile(url, temp);
-            
-            InputStream in = new FileInputStream(temp);
-            BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-            
-            company.getHistory().clear();
-            String line = buf.readLine();
-            while((line = buf.readLine()) != null) {
+    public void realTimeUpdate(Company company) throws MalformedURLException, IOException {
+        URL url = new URL(HISTORY_URL + company.getCode());
+        File temp = File.createTempFile("tmp-exchange", ".tmp");
+        FileUtils.copyURLToFile(url, temp);
+        InputStream in = new FileInputStream(temp);
+        BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+
+        company.getHistory().clear();
+        
+        String line = buf.readLine();
+        while ((line = buf.readLine()) != null) {
+            if (StringUtils.isNotBlank(line)) {
                 History history = new History(line);
                 history.setCompany(company);
                 company.getHistory().add(history);
             }
-            
-            buf.close();
-            temp.deleteOnExit();
-            em.persist(company);
-            em.flush();
-            return company.getHistory();
-        } catch (IOException ex) {
-            Logger.getLogger(CompanyEjb.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+
+        buf.close();
+        temp.deleteOnExit();
+        em.merge(company);
+        
+        em.flush();
     }
 }

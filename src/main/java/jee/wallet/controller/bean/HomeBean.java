@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.StockExchangeEjb;
 import jee.wallet.model.entities.StockExchange;
 
 public class HomeBean implements Serializable {
 
+    private static final String COMPANY_INDEX_PATH = "/company";
+    
     @EJB
     private StockExchangeEjb exchangeEjb;
     private List<StockExchange> exchanges;
@@ -25,7 +28,6 @@ public class HomeBean implements Serializable {
                 Logger.getLogger(HomeBean.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-
         exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
     }
 
@@ -34,5 +36,12 @@ public class HomeBean implements Serializable {
             exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
         }
         return exchanges;
+    }
+    
+    public String getCompanyLink() {
+    	ExternalContext context = FacesContext.getCurrentInstance()
+                .getExternalContext();
+    	return context.encodeActionURL(context.getRequestContextPath() 
+                + COMPANY_INDEX_PATH);
     }
 }

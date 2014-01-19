@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Detail : #{companyBean.company.name}</title>
+                <link rel="stylesheet" type="text/css" href="/Wallet/jsfcrud.css" />
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <ui:include src="/WEB-INF/header.xhtml" />
+            <br/>
+            <f:event type="preRenderView" listener="#{companyBean.init}" />
+            <section class="content">
+                <section class="company" >
+                    <section>
+                        <h1>#{companyBean.company.name} (#{companyBean.company.code})</h1>
+                        <p><span>Sector : </span><span>#{companyBean.company.sector}</span></p>
+                        <p><span>Capital : </span><span>#{companyBean.company.marketCap}</span></p>
+                        <p><span>IPO Year : </span><span>#{companyBean.company.ipoYear}</span></p>
+                        <p><span>Industry : </span><span>#{companyBean.company.industry}</span></p>
+                    </section>
+                    <section class="history">
+                        <p:dataTable var="history" value="#{companyBean.history}"
+                                    paginator="true" rows="20"  
+                                    paginatorPosition="bottom" >
+                           <p:column headerText="Date">  
+                               <h:outputText value="#{history.date}">
+                                   <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                               </h:outputText>
+                           </p:column>  
+
+                           <p:column headerText="Ouverture">  
+                               <h:outputText value="#{history.open}" />  
+                           </p:column>
+
+                           <p:column headerText="High">  
+                               <h:outputText value="#{history.high}" />  
+                           </p:column>                             
+
+                           <p:column headerText="Low">  
+                               <h:outputText value="#{history.low}" />  
+                           </p:column>  
+
+                           <p:column headerText="Close">
+                               <h:outputText value="#{history.close}" />  
+                           </p:column>
+
+                           <p:column headerText="Volume">
+                               <h:outputText value="#{history.volume}" />  
+                           </p:column>
+
+                           <p:column headerText="Adj Close">
+                               <h:outputText value="#{history.adjClose}" />  
+                           </p:column>
+
+                       </p:dataTable>
+                    </section>
+                </section>
+            </section>
+            <ui:include src="/WEB-INF/footer.xhtml" />
+        </h:body>
+
+    </f:view>
+</html>

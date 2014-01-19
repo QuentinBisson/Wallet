@@ -3,6 +3,8 @@ package jee.wallet.model.entities;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +39,7 @@ public class Company implements Serializable {
     @Column
     private Float lastSale;
     @Column
-    private Double marketCap;
+    private BigDecimal marketCap;
     @Column
     private Long adrTso;
     @Column
@@ -48,51 +50,51 @@ public class Company implements Serializable {
     private String summaryQuote;
     @OneToMany
     private List<History> history;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<StockExchange> stockExchanges;
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<StockOption> options;
 
     public Company() {
-        history = new ArrayList<History>();
-        options = new ArrayList<StockOption>();
-        stockExchanges = new ArrayList<StockExchange>();
+        this(null);
     }
 
     public Company(String line) {
         history = new ArrayList<History>();
         options = new ArrayList<StockOption>();
         stockExchanges = new ArrayList<StockExchange>();
-    
-        List<String> i = Lists.newArrayList(
-                Splitter.on("\",\"").split(line));
-        
-        code = i.get(0).replaceAll("\"", "");
-        name = i.get(1);
-        
-        String tmp = i.get(2);
-        if (NumberUtils.isNumber(tmp)) {
-            lastSale = Float.valueOf(tmp);
+
+        if (StringUtils.isNotBlank(line)) {
+            List<String> i = Lists.newArrayList(
+                    Splitter.on("\",\"").split(line));
+
+            code = i.get(0).replaceAll("\"", "");
+            name = i.get(1);
+
+            String tmp = i.get(2);
+            if (NumberUtils.isNumber(tmp)) {
+                lastSale = Float.valueOf(tmp);
+            }
+
+            tmp = i.get(3);
+            if (NumberUtils.isNumber(tmp)) { 
+                marketCap = new BigDecimal(tmp);
+            }
+
+            tmp = i.get(4);
+            if (NumberUtils.isNumber(tmp)) {
+                adrTso = Long.valueOf(tmp);
+            }
+
+            tmp = i.get(5);
+            if (NumberUtils.isNumber(tmp)) {
+                ipoYear = Integer.valueOf(tmp);
+            }
+
+            sector = i.get(6);
+            industry = i.get(7);
+            summaryQuote = i.get(8).replaceAll("\",", "");
         }
-        
-        tmp = i.get(3);
-        if (NumberUtils.isNumber(tmp)) {
-            marketCap = Double.valueOf(tmp);
-        }
-        
-        tmp = i.get(4);
-        if (NumberUtils.isNumber(tmp)) {
-            adrTso = Long.valueOf(tmp);
-        }
-        
-        tmp = i.get(5);
-        if (NumberUtils.isNumber(tmp)) {
-            ipoYear = Integer.valueOf(tmp);
-        }
-        
-        sector = i.get(6);
-        industry = i.get(7);
-        summaryQuote = i.get(8).replaceAll("\",", "");
     }
 
     public Long getId() {
@@ -143,11 +145,11 @@ public class Company implements Serializable {
         this.lastSale = lastSale;
     }
 
-    public Double getMarketCap() {
+    public BigDecimal getMarketCap() {
         return marketCap;
     }
 
-    public void setMarketCap(Double marketCap) {
+    public void setMarketCap(BigDecimal marketCap) {
         this.marketCap = marketCap;
     }
 
@@ -182,7 +184,7 @@ public class Company implements Serializable {
     public void setSummaryQuote(String summaryQuote) {
         this.summaryQuote = summaryQuote;
     }
-    
+
     public List<History> getHistory() {
         return this.history;
     }
@@ -210,12 +212,15 @@ public class Company implements Serializable {
     @Override
     public String toString() {
         String result = getClass().getSimpleName() + " ";
-        if (code != null && !code.trim().isEmpty())
+        if (code != null && !code.trim().isEmpty()) {
             result += "code: " + code;
-        if (name != null && !name.trim().isEmpty())
+        }
+        if (name != null && !name.trim().isEmpty()) {
             result += ", name: " + name;
-        if (sector != null && !sector.trim().isEmpty())
+        }
+        if (sector != null && !sector.trim().isEmpty()) {
             result += ", sector: " + sector;
+        }
         return result;
     }
 

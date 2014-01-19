@@ -24,4 +24,21 @@
 	  <managed-bean-class>jee.wallet.controller.bean.RegisterBean</managed-bean-class>
 	  <managed-bean-scope>request</managed-bean-scope>
      </managed-bean>
+     <managed-bean>
+        <managed-bean-name>companyBean</managed-bean-name>
+        <managed-bean-class>jee.wallet.controller.bean.CompanyBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>company</from-outcome>
+            <to-view-id>/company/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>
