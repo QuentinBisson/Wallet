@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -30,11 +31,14 @@ public class CompanyBean implements Serializable {
     private Company company;
     private CartesianChartModel historyChartModel;
     private final static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+    private long id;
     
+    @PostConstruct
     public void init() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         Map<String, String> params = context.getRequestParameterMap();
-        company = companyEjb.findById(new Integer(params.get("id")));
+        id = new Long(params.get("id"));
+        company = companyEjb.findById(id);
         if (!FacesContext.getCurrentInstance()
                 .getPartialViewContext().isAjaxRequest()) {
             try {

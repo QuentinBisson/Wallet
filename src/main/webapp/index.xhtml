@@ -28,19 +28,19 @@
                                     <p:dataTable var="company" value="#{item.companies}"
                                                  paginator="true" rows="20"  
                                                  paginatorPosition="bottom" >  
-                                        <p:column headerText="Symbol">  
+                                        <p:column headerText="Symbol" filterBy="#{company.code}" filterMatchMode="contains">  
                                             <h:outputText value="#{company.code}" />  
                                         </p:column>  
 
-                                        <p:column headerText="Name">  
+                                        <p:column headerText="Name" filterBy="#{company.name}" filterMatchMode="contains">  
                                             <h:outputText value="#{company.name}" />  
                                         </p:column>
 
-                                        <p:column headerText="Sector">  
+                                        <p:column headerText="Sector" filterBy="#{company.sector}" filterMatchMode="contains">  
                                             <h:outputText value="#{company.sector}" />  
                                         </p:column>                             
 
-                                        <p:column headerText="Last Sale">  
+                                        <p:column headerText="Last Sale" sortBy="#{company.lastSale}">  
                                             <h:outputText value="#{company.lastSale}" />  
                                         </p:column>  
 

@@ -13,7 +13,7 @@ import jee.wallet.model.entities.StockExchange;
 
 public class HomeBean implements Serializable {
 
-    private static final String COMPANY_INDEX_PATH = "/company";
+    private static final String COMPANY_INDEX_PATH = "/company/index.xhtml";
     
     @EJB
     private StockExchangeEjb exchangeEjb;
