@@ -8,12 +8,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.UserEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
+import jee.wallet.model.entities.ClientStatusType;
 import jee.wallet.model.entities.User;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -29,15 +32,12 @@ public class LoginBean implements Serializable {
     @EJB
     private UserEjb userEjb;
 
-    public LoginBean() {
+    public LoginBean() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
         if (externalContext.getSessionMap().containsKey("user")) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_ADMIN_URL);
-            } catch (IOException ex) {
-                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            User user = (User) externalContext.getSessionMap().get("user");
+            redirect(user);
         }
     }
 
@@ -57,29 +57,46 @@ public class LoginBean implements Serializable {
         this.password = password;
     }
 
-    public void connect() {
-        try {
+    private void redirect(User user) throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (user instanceof Administrator) {
+            context.getExternalContext().redirect(REDIRECT_ADMIN_URL);
+        } else if (user instanceof Client) {
+            context.getExternalContext().redirect(REDIRECT_USER_URL);
+        }
+    }
+
+    public void connect() throws IOException {
+        boolean isValid = true;
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (StringUtils.isBlank(userName)) {
+            isValid = false;
+            context.addMessage("userName",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Le nom d'utilisateur ne peut être vide",
+                            "Erreur de connection"));
+        }
+
+        if (StringUtils.isBlank(password)) {
+            isValid = false;
+            context.addMessage("password",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Le mot de passe ne peut être vide",
+                            "Erreur de connection"));
+        }
+        if (isValid) {
             User user = userEjb.login(userName, password);
             if (user != null) {
-                FacesContext context = FacesContext.getCurrentInstance();
-                ExternalContext externalContext = context.getExternalContext();
-                user.setLastConnection(new Date());
-                userEjb.update(user);
-                externalContext.getSessionMap().put("user", user);
-                if (user instanceof Administrator) {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_ADMIN_URL);
-                } else if (user instanceof Client) {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(REDIRECT_USER_URL);
+                if (!(user instanceof Client && ClientStatusType.CLOSED.equals(
+                        ((Client) user).getStatus()))) {
+                    ExternalContext externalContext = context.getExternalContext();
+                    user.setLastConnection(new Date());
+                    userEjb.update(user);
+                    externalContext.getSessionMap().put("user", user);
+                    redirect(user);
                 }
             }
-        } catch (UnsupportedEncodingException ex) {
-            System.out.println("Oups");
-        } catch (NoSuchAlgorithmException ex) {
-            System.out.println("oups");
-        } catch (IOException ex) {
-            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("after Valid");
     }
 
     public void logout() {
@@ -88,8 +105,10 @@ public class LoginBean implements Serializable {
         externalContext.getSessionMap().remove("user");
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("Wallet");
+
         } catch (IOException ex) {
-            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginBean.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -8,11 +8,16 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.LocalBean;
 
 @Stateless
@@ -24,11 +29,17 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
     private static final String SELECT_ALL = "SELECT u FROM User u";
     private static final String COUNT_ALL = "SELECT COUNT(u) FROM User u";
 
-    private static String hashString(String s) throws NoSuchAlgorithmException,
+    public static String hashString(String s) throws NoSuchAlgorithmException,
             UnsupportedEncodingException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-512");
-        byte[] hash = digest.digest(s.getBytes("UTF-8"));
-        return hash.toString();
+        MessageDigest mda = MessageDigest.getInstance("SHA-256");
+        mda.update(s.getBytes("UTF-8"));
+        
+        byte[] hash = mda.digest();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hash.length; i++) {
+            sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
     }
 
     public static void hashPassword(User u) throws NoSuchAlgorithmException,
@@ -117,21 +128,18 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
         if (user == null) {
             throw new IllegalArgumentException("The user must be not null.");
         }
-        /*if (!em.contains(user)) {
-            throw new IllegalStateException("The user is in an invalid state.");
-        }*/
         User c = findById(user.getId());
         if (c == null) {
             throw new IllegalArgumentException("The user is invalid.");
         }
-        /*try {
+        try {
             hashPassword(user);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
-        }*/
-        
+        }
+
         em.merge(user);
         em.flush();
     }
@@ -156,8 +164,7 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User login(String username, String password)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public User login(String username, String password) {
         Map<String, Object> params = new HashMap<String, Object>();
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT u FROM User u");
@@ -169,13 +176,17 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
         }
         if (StringUtils.isNotBlank(password)) {
             sb.append(" AND ").append("u.password = :password ");
-            params.put("password", password);
+            try {
+                params.put("password", hashString(password));
+            } catch (NoSuchAlgorithmException ex) {
+                return null;
+            } catch (UnsupportedEncodingException ex) {
+                return null;
+            }
         } else {
             throw new IllegalArgumentException("Password can't be null");
         }
-        System.out.println("sb = " + sb);
         Query q = em.createQuery(sb.toString());
-        System.out.println("query " + q.toString());
         setParameters(q, params);
         try {
             return (User) q.getSingleResult();

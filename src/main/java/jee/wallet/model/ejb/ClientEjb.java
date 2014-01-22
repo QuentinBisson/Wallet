@@ -1,6 +1,7 @@
 package jee.wallet.model.ejb;
 
-import jee.wallet.model.entities.*;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
@@ -10,6 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
+import jee.wallet.model.entities.Client;
+import jee.wallet.model.entities.ClientStatusType;
+import jee.wallet.model.entities.ClientType;
+import jee.wallet.model.entities.Company;
+import jee.wallet.model.entities.StockExchange;
+import jee.wallet.model.entities.StockOption;
+import jee.wallet.model.entities.Wallet;
 
 @Stateless
 @LocalBean
@@ -34,20 +42,20 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         wallet.setBalance(0d);
         client.setWallet(wallet);
         
-        /*try {
+        try {
             UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
         }
-
+        
         if (client.getStatus() == null) {
             client.setStatus(ClientStatusType.OPEN);
         }
         if (client.getType() == null) {
             client.setType(ClientType.NORMAL);
-        }*/
+        }
         em.persist(client);
         walletEjb.create(wallet);
         em.flush();
@@ -124,22 +132,18 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         if (client == null) {
             throw new IllegalArgumentException("The client must be not null.");
         }
-       /*if (!em.contains(client)) {
-            throw new IllegalStateException("The client is in an invalid state.");
-        }*/
         System.out.println("Je suis la");
         Client c = findById(client.getId());
         if (c == null) {
             throw new IllegalArgumentException("The client is invalid.");
         }
-        System.out.println("Je suis icsdflsdki");
-        /*try {
+        try {
             UserEjb.hashPassword(client);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
-        }*/
+        }
 
         System.out.println("client "+client.getUsername());
         System.out.println("balance "+client.getWallet().getBalance());

@@ -17,6 +17,7 @@ public class HomeBean implements Serializable {
     
     @EJB
     private StockExchangeEjb exchangeEjb;
+    
     private List<StockExchange> exchanges;
     
     public void init() {
@@ -41,7 +42,6 @@ public class HomeBean implements Serializable {
     public String getCompanyLink() {
     	ExternalContext context = FacesContext.getCurrentInstance()
                 .getExternalContext();
-    	return context.encodeActionURL(context.getRequestContextPath() 
-                + COMPANY_INDEX_PATH);
+    	return context.encodeActionURL(COMPANY_INDEX_PATH);
     }
 }
