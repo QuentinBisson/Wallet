@@ -17,55 +17,76 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-            <br/>
             <f:event type="preRenderView" listener="#{companyBean.init}" />
+            <h1 style="text-align: center; font-family: arial;"><h:outputText value="Historique et détails : #{companyBean.company.name}"/></h1>
             <section class="content">
                 <section class="company" >
+                    <p:panel header="Détails">
+                         <h:panelGrid columns="6" style="width:100%"> 
+                             <h:outputLabel value="Code :"/>
+                             <h:outputText value="#{companyBean.company.code}"/>
+                             
+                              <h:outputLabel value="Nom :"/>
+                              <h:outputText value="#{companyBean.company.name}"/>
+                             
+                             <h:outputLabel value="Sector : "/>
+                             <h:outputText value="#{companyBean.company.sector}"/>
+                             
+                             <h:outputLabel value="Capital :"/>
+                             <h:outputText value="#{companyBean.company.marketCap}"/>
+                             
+                             <h:outputLabel value="IPO Year :"/>
+                             <h:outputText value="#{companyBean.company.ipoYear}"/>
+                             
+                             <h:outputLabel value="Industry :"/>
+                             <h:outputText value="#{companyBean.company.industry}"/>
 
-                    <p:lineChart id="linear" value="#{companyBean.historyChartModel}" legendPosition="e"  
-                                 title="#{companyBean.company.name} (#{companyBean.company.code})" zoom="true" xaxisAngle="-50"/>
-                    <section>
-                        <p><span>Sector : </span><span>#{companyBean.company.sector}</span></p>
-                        <p><span>Capital : </span><span>#{companyBean.company.marketCap}</span></p>
-                        <p><span>IPO Year : </span><span>#{companyBean.company.ipoYear}</span></p>
-                        <p><span>Industry : </span><span>#{companyBean.company.industry}</span></p>
-                    </section>
-                    <section class="history">
-                        <p:dataTable var="history" value="#{companyBean.history}"
-                                     paginator="true" rows="20"  
-                                     paginatorPosition="bottom" >
-                            <p:column headerText="Date">  
-                                <h:outputText value="#{history.date}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                                </h:outputText>
-                            </p:column>  
+                         </h:panelGrid>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="historique : graphique" > 
+                        <p:lineChart id="linear" value="#{companyBean.historyChartModel}" legendPosition="e"  
+                                     title="#{companyBean.company.name} (#{companyBean.company.code})" zoom="true" xaxisAngle="-50"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="historique : tableau">
+                        <section class="history">
+                            <p:dataTable var="history" value="#{companyBean.history}"
+                                         paginator="true" rows="20"  
+                                         paginatorPosition="bottom" >
+                                <p:column headerText="Date">  
+                                    <h:outputText value="#{history.date}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                    </h:outputText>
+                                </p:column>  
 
-                            <p:column headerText="Ouverture">  
-                                <h:outputText value="#{history.open}" />  
-                            </p:column>
+                                <p:column headerText="Ouverture">  
+                                    <h:outputText value="#{history.open}" />  
+                                </p:column>
 
-                            <p:column headerText="High">  
-                                <h:outputText value="#{history.high}" />  
-                            </p:column>                             
+                                <p:column headerText="High">  
+                                    <h:outputText value="#{history.high}" />  
+                                </p:column>                             
 
-                            <p:column headerText="Low">  
-                                <h:outputText value="#{history.low}" />  
-                            </p:column>  
+                                <p:column headerText="Low">  
+                                    <h:outputText value="#{history.low}" />  
+                                </p:column>  
 
-                            <p:column headerText="Close">
-                                <h:outputText value="#{history.close}" />  
-                            </p:column>
+                                <p:column headerText="Close">
+                                    <h:outputText value="#{history.close}" />  
+                                </p:column>
 
-                            <p:column headerText="Volume">
-                                <h:outputText value="#{history.volume}" />  
-                            </p:column>
+                                <p:column headerText="Volume">
+                                    <h:outputText value="#{history.volume}" />  
+                                </p:column>
 
-                            <p:column headerText="Adj Close">
-                                <h:outputText value="#{history.adjClose}" />  
-                            </p:column>
+                                <p:column headerText="Adj Close">
+                                    <h:outputText value="#{history.adjClose}" />  
+                                </p:column>
 
-                        </p:dataTable>
-                    </section>
+                            </p:dataTable>
+                        </section>
+                    </p:panel>
                 </section>
             </section>
             <ui:include src="/WEB-INF/footer.xhtml" />
