@@ -2,8 +2,6 @@ package jee.wallet.controller.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,7 +102,7 @@ public class LoginBean implements Serializable {
         ExternalContext externalContext = context.getExternalContext();
         externalContext.getSessionMap().remove("user");
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("Wallet");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet");
 
         } catch (IOException ex) {
             Logger.getLogger(LoginBean.class

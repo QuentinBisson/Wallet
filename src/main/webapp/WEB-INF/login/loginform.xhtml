@@ -6,7 +6,7 @@
     xmlns:p="http://primefaces.org/ui">
     
     <h:form>
-        <p:panel id="panel" header="Log in" style="margin-bottom:10px;">  
+        <p:panel id="panel" header="Connexion" style="margin-bottom:10px;">  
             <p:messages id="messages" />  
             <h:panelGrid columns="3">  
                 <h:outputLabel for="username" value="Identifiant:" />
@@ -15,7 +15,7 @@
                 <p:password value="#{loginBean.password}" id="password"/> <br/>
             </h:panelGrid>
             <br/>
-            <p:commandButton value="Log in" ajax="false" action="#{loginBean.connect}" styleClass="ui-priority-primary" type="submit" />  
+            <p:commandButton value="Connexion" ajax="false" action="#{loginBean.connect}" styleClass="ui-priority-primary" type="submit" />  
         </p:panel>
     </h:form>
 </ui:composition>

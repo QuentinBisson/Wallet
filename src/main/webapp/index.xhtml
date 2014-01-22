@@ -28,7 +28,7 @@
                                     <p:dataTable var="company" value="#{item.companies}"
                                                  paginator="true" rows="20"  
                                                  paginatorPosition="bottom" >  
-                                        <p:column headerText="Symbol" filterBy="#{company.code}" filterMatchMode="contains">  
+                                        <p:column headerText="Symbol" filterBy="#{company.code}" filterMatchMode="contains" sortBy="#{company.code}">  
                                             <h:outputText value="#{company.code}" />  
                                         </p:column>  
 
