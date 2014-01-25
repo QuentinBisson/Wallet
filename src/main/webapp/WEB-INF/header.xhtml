@@ -25,7 +25,7 @@
                     
                     <c:if test="#{user != null}">
                         <f:facet name="options" >  
-                            <p:commandLink value="Déconnexion(#{user.username})" actionListener="#{loginBean.logout}" action="#{loginBean.logout}"/> 
+                            <p:commandLink value="Déconnexion( #{user.username} )" actionListener="#{loginBean.logout}"/> 
                         </f:facet>  
                     </c:if>
                 </p:menubar>

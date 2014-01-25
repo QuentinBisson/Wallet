@@ -3,8 +3,6 @@ package jee.wallet.controller.bean;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -24,7 +22,8 @@ public class LoginBean implements Serializable {
 
     private static final String REDIRECT_ADMIN_URL = "/Wallet/admin/admin.xhtml";
     private static final String REDIRECT_USER_URL = "/Wallet/user/user.xhtml";
-
+    private static final String REDIRECT_HOME_URL = "/Wallet/index.xhtml";
+    
     private String userName;
     private String password;
     @EJB
@@ -61,6 +60,8 @@ public class LoginBean implements Serializable {
             context.getExternalContext().redirect(REDIRECT_ADMIN_URL);
         } else if (user instanceof Client) {
             context.getExternalContext().redirect(REDIRECT_USER_URL);
+        } else {
+            context.getExternalContext().redirect(REDIRECT_HOME_URL);
         }
     }
 
@@ -97,17 +98,18 @@ public class LoginBean implements Serializable {
         }
     }
 
-    public void logout() {
+    public void logout() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
-        externalContext.getSessionMap().remove("user");
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet");
-
-        } catch (IOException ex) {
-            Logger.getLogger(LoginBean.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+        externalContext.invalidateSession();
+        externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
+        System.out.println("invalidate session");
+//        return "/index.xhtml?faces-redirect=true";
+//      try {
+//          FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet");
+//      } catch (IOException ex) {
+//          Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+//      }
     }
 
 }

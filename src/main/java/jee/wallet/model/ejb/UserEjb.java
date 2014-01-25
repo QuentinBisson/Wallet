@@ -33,7 +33,7 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
             UnsupportedEncodingException {
         MessageDigest mda = MessageDigest.getInstance("SHA-256");
         mda.update(s.getBytes("UTF-8"));
-        
+
         byte[] hash = mda.digest();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < hash.length; i++) {
@@ -132,14 +132,15 @@ public class UserEjb extends AbstractEjb implements UserEjbInterface {
         if (c == null) {
             throw new IllegalArgumentException("The user is invalid.");
         }
-        try {
-            hashPassword(user);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Missing hash algorithm");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Missing hash algorithm");
+        if (!c.getPassword().equals(user.getPassword())) {
+            try {
+                hashPassword(user);
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException("Missing hash algorithm");
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalStateException("Missing hash algorithm");
+            }
         }
-
         em.merge(user);
         em.flush();
     }
