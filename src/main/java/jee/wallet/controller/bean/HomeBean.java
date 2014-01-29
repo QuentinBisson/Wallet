@@ -11,6 +11,7 @@ import jee.wallet.model.entities.StockExchange;
 public class HomeBean implements Serializable {
 
     private static final String COMPANY_INDEX_PATH = "/Wallet/company/index.xhtml";
+    private static final String COMPANY_BUY_PATH = "/Wallet/company/buy.xhtml";
     private static final String TRANSACTION_INDEX_PATH = "/Wallet/user/transactions.xhtml";
 
     @EJB
@@ -37,6 +38,12 @@ public class HomeBean implements Serializable {
         ExternalContext context = FacesContext.getCurrentInstance()
                 .getExternalContext();
         return context.encodeActionURL(COMPANY_INDEX_PATH);
+    }
+    
+    public String getBuyAction() {
+        ExternalContext context = FacesContext.getCurrentInstance()
+                .getExternalContext();
+        return context.encodeActionURL(COMPANY_BUY_PATH);
     }
 
     public String getTransactionLink() {

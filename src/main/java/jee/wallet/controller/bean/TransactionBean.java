@@ -78,11 +78,11 @@ public class TransactionBean {
         this.numberOfActions = value;
     }
 
-    public void buyActions(ActionEvent event) {
+    public void buyActions(Long id) {
         if (companyId < 0) {
             throw new IllegalArgumentException("id < 0");
         }
-        System.out.println(companyId);
+        System.out.println("id : "+id);
         Company company = companyEjb.findById(companyId);
         System.out.println(company.getName());
         clientEjb.buyStockOptions(client, company, numberOfActions, TransactionType.NORMAL);

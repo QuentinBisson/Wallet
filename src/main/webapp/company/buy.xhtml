@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Detail : #{companyBean.company.name}</title>
+                <link rel="stylesheet" type="text/css" href="/Wallet/jsfcrud.css" />
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <ui:include src="/WEB-INF/header.xhtml" />
+            <h:form>
+
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                <p:panel header="Achat d'option">
+                    <p:panelGrid columns="2">
+                        <h:outputLabel value="Company :"/>
+                        <h:outputText value="#{buyBean.company.name}"/>
+                        
+                        <h:outputLabel value="Valeur :"/>
+                        <h:outputText value="#{buyBean.company.lastSale}"/>
+
+                        <h:outputLabel value="Quantité :"/>
+                        <p:inputText value="#{buyBean.numberOfActions}"/>                       
+
+                        <p:commandButton value="Confirmer" actionListener="#{buyBean.buyAction}" update="messages">
+                            <f:param value="#{buyBean.company.id}" name="id"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                </p:panel>
+
+            </h:form>
+            <ui:include src="/WEB-INF/footer.xhtml" />
+        </h:body>
+
+    </f:view>
+</html>

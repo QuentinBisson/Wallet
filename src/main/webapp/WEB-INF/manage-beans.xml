@@ -48,6 +48,11 @@
         <managed-bean-class>jee.wallet.controller.bean.TransactionBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+      <managed-bean>
+        <managed-bean-name>buyBean</managed-bean-name>
+        <managed-bean-class>jee.wallet.controller.bean.BuyBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
     <navigation-rule>
         <navigation-case>
             <from-outcome>home</from-outcome>
