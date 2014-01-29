@@ -236,6 +236,8 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
         if (options.size() < amount && ClientType.NORMAL == client.getType()) {
             throw new IllegalArgumentException("You don't have enough options");
         }
+        System.out.println("options "+options);
+        System.out.println("options size"+options.size());
         options = options.subList(0, amount);
         walletEjb.sellStockOptions(client.getWallet(), options, type);
     }

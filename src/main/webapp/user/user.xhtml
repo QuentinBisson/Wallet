@@ -67,7 +67,7 @@
                     <p:column styleClass="actions">
                         <h:form>
                             <h:outputLink value="#{homeBean.buyAction}">
-                                <f:param name="id" value="#{company.id}" />
+                                <f:param name="id" value="#{transaction.company.id}" />
                                 <f:param name="sell" value="true" />
                                 <f:param name="buy" value="false" />
                                 <f:param name="speculate" value="false" />

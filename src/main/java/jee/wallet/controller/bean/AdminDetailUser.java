@@ -28,7 +28,11 @@ public class AdminDetailUser implements Serializable {
 
     @PostConstruct
     public void init() {
+        try{
         client = clientEjb.findById(id);
+        } catch(Exception e){
+            client = null;
+        }
     }
 
     public long getId() {

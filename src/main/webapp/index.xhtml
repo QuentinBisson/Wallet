@@ -78,7 +78,8 @@
                                             <h:outputText value="#{company.ipoYear}" />  
                                         </p:column>
 
-                                        <p:column width="5%" style="width:5%">  
+                                        <p:column width="5%" style="width:5%" filterBy="#{company.industry}"
+                                                  filterMatchMode="contains" >  
                                             <f:facet name="header">  
                                                 <h:outputText value="Industrie" />  
                                             </f:facet>  
@@ -86,7 +87,7 @@
                                         </p:column>
 
                                         <c:if test="#{user != null and user['class'].simpleName == 'Client'}">
-                                            <p:column styleClass="actions" width="20%" style="width:20%">
+                                            <p:column styleClass="actions" width="5%" style="width:5%">
                                                 <h:outputLink value="#{homeBean.buyAction}">
                                                     <f:param name="id" value="#{company.id}" />
                                                     <f:param name="sell" value="false" />

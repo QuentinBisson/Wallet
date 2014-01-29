@@ -86,7 +86,7 @@ public class BuyBean {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     
-      public void SpeculateAction() {
+      public void speculateAction() {
         FacesMessage msg = null;
         try {
             clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);

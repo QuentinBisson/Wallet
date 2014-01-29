@@ -3,7 +3,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
     <f:view contentType="text/html">
         <h:head>
@@ -19,7 +20,9 @@
 
             <p:dataTable value="#{adminDetailUser.client.wallet.transactions}" var="transaction">
                 <p:column headerText="Date de la transaction">
-                    <h:outputLabel value="#{transaction.transactionDate}"/>
+                    <h:outputLabel value="#{transaction.transactionDate}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputLabel>
                 </p:column>
                 <p:column headerText="Type de transaction">
                     <h:outputLabel value="#{transaction.operationType}"/>
@@ -27,10 +30,14 @@
                 <p:column headerText="Prix">
                     <h:outputLabel value="#{transaction.price}"/>
                 </p:column>
-                <p:column headerText="Options">
-                    <p:dataList value="#{transaction.stockOptions}" var="option" type="ordered">  
-                        <h:outputLabel value="#{option.company.name}"/>
-                    </p:dataList>  
+                <p:column headerText="Quantité">
+                    <h:outputLabel value="#{fn:length(transaction.stockOptions)}"/>
+                </p:column>
+                <p:column headerText="Entreprise">
+                    <h:outputLabel value="#{transaction.stockOptions.get(0).company.name}"/>
+                </p:column>
+                <p:column headerText="Prix total">
+                    <h:outputLabel value="#{fn:length(transaction.stockOptions) * transaction.price}"/>
                 </p:column>
             </p:dataTable>
             <ui:include src="/WEB-INF/footer.xhtml" />
