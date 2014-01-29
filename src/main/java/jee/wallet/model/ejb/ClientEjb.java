@@ -2,6 +2,7 @@ package jee.wallet.model.ejb;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
@@ -15,8 +16,10 @@ import jee.wallet.model.entities.Client;
 import jee.wallet.model.entities.ClientStatusType;
 import jee.wallet.model.entities.ClientType;
 import jee.wallet.model.entities.Company;
-import jee.wallet.model.entities.StockExchange;
+import jee.wallet.model.entities.OperationType;
 import jee.wallet.model.entities.StockOption;
+import jee.wallet.model.entities.Transaction;
+import jee.wallet.model.entities.TransactionType;
 import jee.wallet.model.entities.Wallet;
 
 @Stateless
@@ -25,7 +28,9 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @EJB
     private WalletEjb walletEjb;
-
+    @EJB
+    private CompanyEjb companyEjb;
+    
     private static final String SELECT_BY_ID = "SELECT c FROM Client c WHERE c.id=:id";
     private static final String SELECT_ALL = "SELECT c FROM Client c";
     private static final String COUNT_ALL = "SELECT COUNT(c) FROM Client c";
@@ -63,7 +68,6 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @Override
     public Client findById(long id) {
-        System.out.println("id : "+id);
         return (Client) em.createQuery(SELECT_BY_ID)
                 .setParameter("id", id)
                 .getSingleResult();
@@ -128,11 +132,9 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @Override
     public void update(Client client) {
-        System.out.println("Je suis ici");
         if (client == null) {
             throw new IllegalArgumentException("The client must be not null.");
         }
-        System.out.println("Je suis la");
         Client c = findById(client.getId());
         if (c == null) {
             throw new IllegalArgumentException("The client is invalid.");
@@ -143,10 +145,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
             throw new IllegalStateException("Missing hash algorithm");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Missing hash algorithm");
-        }
-
-        System.out.println("client "+client.getUsername());
-        System.out.println("balance "+client.getWallet().getBalance());
+        }        
         em.merge(client);
         walletEjb.update(client.getWallet());
         em.flush();
@@ -172,34 +171,32 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
     }
 
     @Override
-    public void buyStockOptions(Client client, Company company, StockExchange stockExchange, int amount) {
+    public void buyStockOptions(Client client, Company company,
+            int amount, TransactionType type) {
         if (client == null) {
             throw new IllegalArgumentException("The client must be not null.");
-        }
-        if (!em.contains(client)) {
-            throw new IllegalStateException("The client is in an invalid state.");
         }
 
         if (company == null) {
             throw new IllegalArgumentException("The company must be not null.");
         }
-        if (!em.contains(company)) {
-            throw new IllegalStateException("The company is in an invalid state.");
-        }
 
-        if (stockExchange == null) {
-            throw new IllegalArgumentException("The stock exchange must be not null.");
-        }
-        if (!em.contains(stockExchange)) {
-            throw new IllegalStateException("The stock exchange is in an invalid state.");
-        }
-
-        List<StockOption> options = walletEjb.getOptionsForCompanyInStockExchange(client.getWallet(),
-                company, stockExchange);
-        if (amount <= 0 || amount > options.size()) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("The supplied amount can't be 0 or under");
         }
-        //TODO frais = 0.5%de la transaction
+        if (companyEjb.getAmountForActions(company, amount, OperationType.PURCHASE) 
+                > client.getWallet().getBalance()) {
+            throw new IllegalArgumentException("You're not rich enough");
+        }
+        List<StockOption> options = new ArrayList<StockOption>();
+        for (int i = 0 ; i < amount; i++) {
+            StockOption option = new StockOption();
+            option.setCompany(company);
+            company.getOptions().add(option);
+            company.getStockExchange().getOptions().add(option);
+            options.add(option);
+        }
+        walletEjb.buyStockOptions(client.getWallet(), options, type);
     }
 
     @Override
@@ -233,8 +230,26 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
     }
 
     @Override
-    public void sellStockOptions(Client client, Company company, StockExchange stockExchange, int amount) {
-        //TODO  frais = 0.5%de la transaction
+    public void sellStockOptions(Client client, Company company,
+            int amount, TransactionType type) {
+        List<StockOption> options = client.getWallet().getOptionsForCompany(company);
+        if (options.size() < amount && ClientType.NORMAL == client.getType()) {
+            throw new IllegalArgumentException("You don't have enough options");
+        }
+        options = options.subList(0, amount);
+        walletEjb.sellStockOptions(client.getWallet(), options, type);
+    }
+    
+    @Override
+    public void cancelPrivilegedTransaction(Client client, Transaction t) {
+        if (client == null) {
+            throw new IllegalArgumentException("The client does not exist.");
+        }
+        if (t == null || t.getTransactionType() == TransactionType.NORMAL) {
+            throw new IllegalArgumentException("The transaction does not "
+                    + "exist or is invalid.");
+        }
+        walletEjb.cancelPrivilegedTransaction(client.getWallet(), t);
     }
 
     @Override

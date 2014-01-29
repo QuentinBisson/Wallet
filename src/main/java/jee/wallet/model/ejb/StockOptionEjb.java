@@ -16,10 +16,6 @@ import javax.ejb.LocalBean;
 @LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class StockOptionEjb extends AbstractEjb implements CrudInterface<StockOption>  {
-    @EJB
-    private CompanyEjb companyEjb;
-    @EJB
-    private StockExchangeEjb stockExchangeEjb;
 
     private static final String SELECT_BY_ID = "SELECT so FROM StockOption so WHERE so.id=:id";
     private static final String SELECT_ALL = "SELECT so FROM StockOption so";
@@ -69,10 +65,6 @@ public class StockOptionEjb extends AbstractEjb implements CrudInterface<StockOp
                 sb.append(separator).append("so.company.id = :companyid");
                 params.put("companyid", stockOption.getCompany().getId());
                 separator = " AND ";
-            }
-            if (stockOption.getStockExchange() != null) {
-                sb.append(separator).append("so.stockExchange.id = :stockexchangeid");
-                params.put("stockexchangeid", stockOption.getStockExchange().getId());
             }
         }
 

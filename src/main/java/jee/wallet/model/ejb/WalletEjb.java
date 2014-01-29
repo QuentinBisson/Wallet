@@ -1,19 +1,20 @@
 package jee.wallet.model.ejb;
 
+import java.util.Date;
 import jee.wallet.model.entities.Company;
-import jee.wallet.model.entities.StockExchange;
 import jee.wallet.model.entities.StockOption;
 import jee.wallet.model.entities.Wallet;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
+import jee.wallet.model.entities.OperationType;
+import jee.wallet.model.entities.Transaction;
+import jee.wallet.model.entities.TransactionType;
 
 @Stateless
 @LocalBean
@@ -21,7 +22,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     @EJB
     private TransactionEjb transactionEjb;
     @EJB
-    private ClientEjb clientEjb;
+    private CompanyEjb companyEjb;
 
     private static final String SELECT_BY_ID = "SELECT w FROM Wallet w WHERE w.id=:id";
     private static final String SELECT_ALL = "SELECT w FROM Wallet w";
@@ -123,15 +124,6 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     }
 
     @Override
-    public void buyStockOptions(Wallet wallet, List<StockOption> options) {
-        if (wallet == null) {
-            throw new IllegalArgumentException("The wallet does not exist.");
-        }
-        //TODO
-        update(wallet);
-    }
-
-    @Override
     public void supply(Wallet wallet, double amount) {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet does not exist.");
@@ -156,30 +148,70 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
     }
 
     @Override
-    public void sellStockOptions(Wallet wallet, List<StockOption> options) {
+    public void buyStockOptions(Wallet wallet, List<StockOption> options, TransactionType type) {
         if (wallet == null) {
             throw new IllegalArgumentException("The wallet does not exist.");
         }
-        //TODO
+        if (options == null || options.isEmpty()) {
+            throw new IllegalArgumentException("The options are empty.");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("The transaction type is invalid.");
+        }
+        Company c = options.get(0).getCompany();
+        if (type == TransactionType.NORMAL) {
+            withdraw(wallet, -companyEjb.getAmountForActions(c, options.size(),
+                OperationType.PURCHASE));
+        } else {
+            //TODO find the right transaction for sup
+            supply(wallet, companyEjb.getAmountForActions(c, options.size(),
+                OperationType.SALE));
+            withdraw(wallet, -companyEjb.getAmountForActions(c, options.size(),
+                OperationType.PURCHASE));
+        }
+        Transaction t = new Transaction();
+        t.setOperationType(OperationType.PURCHASE);
+        t.setPrice(c.getLastSale());
+        t.setStockOptions(options);
+        t.setTransactionDate(new Date());
+        t.setTransactionType(type);
+        transactionEjb.create(t);
+        wallet.getTransactions().add(t);
         update(wallet);
     }
-
+    
     @Override
-    public List<StockOption> getOptionsForCompanyInStockExchange(Wallet wallet, Company company, StockExchange stockExchange) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        StringBuilder sb = new StringBuilder(SELECT_ALL);
-        String separator = " WHERE ";
-        sb.append(" inner join w.company c ");
-        sb.append(" inner join c.stockExchange se ");
-        sb.append(separator).append(" c.id = :companyid");
-        params.put("companyid", company.getId());
-        separator = " AND ";
-        sb.append(separator).append(" se.id = :stockid");
-        params.put("stockid", stockExchange.getId());
-
-        Query q = em.createQuery(sb.toString());
-        setParameters(q, params);
-        return (List<StockOption>) createSearchQuery(SELECT_ALL, wallet)
-                .getResultList();
+    public void sellStockOptions(Wallet wallet, List<StockOption> options, TransactionType type) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        
+        Company c = options.get(0).getCompany();
+        if (type == TransactionType.NORMAL) { 
+            supply(wallet, companyEjb.getAmountForActions(c, options.size(),
+                OperationType.SALE));
+        }
+        Transaction t = new Transaction();
+        t.setOperationType(OperationType.SALE);
+        t.setPrice(c.getLastSale());
+        t.setStockOptions(options);
+        t.setTransactionDate(new Date());
+        t.setTransactionType(type);
+        transactionEjb.create(t);
+        wallet.getTransactions().add(t);
+        update(wallet);
+    }
+    
+    @Override
+    public void cancelPrivilegedTransaction(Wallet wallet, Transaction t) {
+        if (wallet == null) {
+            throw new IllegalArgumentException("The wallet does not exist.");
+        }
+        if (t == null || t.getTransactionType() == TransactionType.NORMAL) {
+            throw new IllegalArgumentException("The transaction does not exist or is invalid.");
+        }
+        wallet.getTransactions().remove(t);
+        transactionEjb.delete(t);
+        update(wallet);
     }
 }

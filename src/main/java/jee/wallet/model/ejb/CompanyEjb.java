@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.History;
-import jee.wallet.model.entities.StockExchange;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
@@ -22,15 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
+import javax.persistence.NoResultException;
+import jee.wallet.model.entities.OperationType;
 import org.apache.commons.io.FileUtils;
 
 @Stateless
 @LocalBean
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
 
     private static final String HISTORY_URL = "http://ichart.finance.yahoo.com/table.csv?s=";
-    
+
     @EJB
     private HistoryEjb historyEjb;
     @EJB
@@ -39,6 +40,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
     private StockExchangeEjb stockExchangeEjb;
 
     private static final String SELECT_BY_ID = "SELECT c FROM Company c WHERE c.id=:id";
+    private static final String SELECT_BY_CODE = "SELECT c FROM Company c WHERE c.code=:code";
     private static final String SELECT_ALL = "SELECT c FROM Company c";
     private static final String COUNT_ALL = "SELECT COUNT(c) FROM Company c";
 
@@ -47,7 +49,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
         if (company == null) {
             throw new IllegalArgumentException("The company must be not null.");
         }
-        if (company.getStockExchanges().isEmpty()) {
+        if (company.getStockExchange() == null) {
             throw new IllegalStateException("The company is in an invalid state.");
         }
         if (em.contains(company)) {
@@ -85,15 +87,13 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
         StringBuilder sb = new StringBuilder(prefix);
         String separator = " WHERE ";
         if (company != null) {
-            if (company.getStockExchanges() != null && !company.getStockExchanges().isEmpty()) {
+            if (company.getStockExchange() != null) {
                 sb.append(" inner join c.stockExchanges se ").append(separator).append(" (");
                 separator = "";
-                for (StockExchange se : company.getStockExchanges()) {
-                    int i = 0;
-                    sb.append(separator).append("se.id = :seid").append(i);
-                    params.put("seid" + i, se.getId());
-                    separator = " OR ";
-                }
+                int i = 0;
+                sb.append(separator).append("se.id = :seid").append(i);
+                params.put("seid" + i, company.getStockExchange().getId());
+                separator = " OR ";
                 sb.append(") ");
                 separator = " AND ";
             }
@@ -113,7 +113,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
             }
         }
 
-        Query q = em.createQuery(sb.toString());
+        Query q = em.createQuery(sb.toString() + " ORDER BY c.code desc");
         setParameters(q, params);
         return q;
     }
@@ -138,7 +138,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
         if (company == null) {
             throw new IllegalArgumentException("The company must be not null.");
         }
-        if (company.getStockExchanges().isEmpty()) {
+        if (company.getStockExchange() == null) {
             throw new IllegalStateException("The company is in an invalid state.");
         }
         if (em.contains(company)) {
@@ -180,7 +180,7 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
         BufferedReader buf = new BufferedReader(new InputStreamReader(in));
 
         company.getHistory().clear();
-        
+
         String line = buf.readLine();
         while ((line = buf.readLine()) != null) {
             if (StringUtils.isNotBlank(line)) {
@@ -193,7 +193,26 @@ public class CompanyEjb extends AbstractEjb implements CompanyEjbInterface {
         buf.close();
         temp.deleteOnExit();
         em.merge(company);
-        
+
         em.flush();
+    }
+
+    public Company findByCode(String code) {
+        try {
+            Company company = (Company) em.createQuery(SELECT_BY_CODE)
+                    .setParameter("code", code)
+                    .getSingleResult();
+            return company;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public double getAmountForActions(Company c, double numberOfActions, OperationType type) {
+        double amountToWithdraw = c.getLastSale() * numberOfActions;
+        if (type == OperationType.PURCHASE) {
+            return amountToWithdraw + (TransactionEjb.TRANSACTION_FEES * amountToWithdraw);
+        }
+        return amountToWithdraw - (TransactionEjb.TRANSACTION_FEES * amountToWithdraw);
     }
 }

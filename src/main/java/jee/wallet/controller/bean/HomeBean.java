@@ -1,10 +1,7 @@
 package jee.wallet.controller.bean;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -14,21 +11,18 @@ import jee.wallet.model.entities.StockExchange;
 public class HomeBean implements Serializable {
 
     private static final String COMPANY_INDEX_PATH = "/Wallet/company/index.xhtml";
-    
+    private static final String TRANSACTION_INDEX_PATH = "/Wallet/user/transactions.xhtml";
+
     @EJB
     private StockExchangeEjb exchangeEjb;
-    
+
     private List<StockExchange> exchanges;
-    
+
     public void init() {
         if (!FacesContext.getCurrentInstance()
                 .getPartialViewContext().isAjaxRequest()) {
-            try {
-                exchangeEjb.realTimeUpdate();
-            } catch (IOException ex1) {
-                Logger.getLogger(HomeBean.class.getName()).log(Level.SEVERE, null, ex1);
-            }
         }
+
         exchanges = exchangeEjb.findAll(0, Integer.MAX_VALUE);
     }
 
@@ -38,10 +32,16 @@ public class HomeBean implements Serializable {
         }
         return exchanges;
     }
-    
+
     public String getCompanyLink() {
-    	ExternalContext context = FacesContext.getCurrentInstance()
+        ExternalContext context = FacesContext.getCurrentInstance()
                 .getExternalContext();
-    	return context.encodeActionURL(COMPANY_INDEX_PATH);
+        return context.encodeActionURL(COMPANY_INDEX_PATH);
+    }
+
+    public String getTransactionLink() {
+        ExternalContext context = FacesContext.getCurrentInstance()
+                .getExternalContext();
+        return context.encodeActionURL(TRANSACTION_INDEX_PATH);
     }
 }

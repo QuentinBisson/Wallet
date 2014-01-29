@@ -6,6 +6,5 @@ import jee.wallet.model.entities.Company;
 
 public interface CompanyEjbInterface extends CrudInterface<Company> {
 
-    public void realTimeUpdate(Company company)
-            throws MalformedURLException, IOException;
+    public void realTimeUpdate(Company company) throws MalformedURLException, IOException;
 }

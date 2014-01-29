@@ -14,16 +14,12 @@ import jee.wallet.model.entities.ClientStatusType;
 import jee.wallet.model.entities.User;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author David
- */
 public class LoginBean implements Serializable {
 
     private static final String REDIRECT_ADMIN_URL = "/Wallet/admin/admin.xhtml";
     private static final String REDIRECT_USER_URL = "/Wallet/user/user.xhtml";
     private static final String REDIRECT_HOME_URL = "/Wallet/index.xhtml";
-    
+
     private String userName;
     private String password;
     @EJB
@@ -104,12 +100,6 @@ public class LoginBean implements Serializable {
         externalContext.invalidateSession();
         externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
         System.out.println("invalidate session");
-//        return "/index.xhtml?faces-redirect=true";
-//      try {
-//          FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet");
-//      } catch (IOException ex) {
-//          Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
-//      }
     }
 
 }

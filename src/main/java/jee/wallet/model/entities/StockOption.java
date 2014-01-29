@@ -11,8 +11,6 @@ public class StockOption implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id = null;
     @ManyToOne
-    private StockExchange stockExchange;
-    @ManyToOne
     private Company company;
 
     public Long getId() {
@@ -21,14 +19,6 @@ public class StockOption implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
-    }
-
-    public StockExchange getStockExchange() {
-        return this.stockExchange;
-    }
-
-    public void setStockExchange(final StockExchange stockExchange) {
-        this.stockExchange = stockExchange;
     }
 
     public Company getCompany() {

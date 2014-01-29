@@ -18,64 +18,122 @@
             <br/>
             <f:event type="preRenderView" listener="#{homeBean.init}" />
             <section class="content">
-                <section class="exchange" >
+                <section class="exchange">
+                    <p:accordionPanel dynamic="true" id="exchange">
+                        <c:forEach items="#{homeBean.exchanges}" var="item">
+                            <p:tab title="#{item.name}">
+                                <p:dataTable var="company" value="#{item.companies}"
+                                             paginator="true" rows="20"  
+                                             paginatorPosition="bottom"
+                                             style="width:90%"> 
 
-                    <h:form>
-                        <p:accordionPanel dynamic="true">  
-                            <c:forEach items="#{homeBean.exchanges}" var="item">
-
-                                <p:tab title="#{item.name}">
-                                    <p:dataTable var="company" value="#{item.companies}"
-                                                 paginator="true" rows="20"  
-                                                 paginatorPosition="bottom" >  
-                                        <p:column headerText="Symbol" filterBy="#{company.code}" filterMatchMode="contains" sortBy="#{company.code}">  
-                                            <h:outputText value="#{company.code}" />  
-                                        </p:column>  
-
-                                        <p:column headerText="Name" filterBy="#{company.name}" filterMatchMode="contains">  
-                                            <h:outputText value="#{company.name}" />  
-                                        </p:column>
-
-                                        <p:column headerText="Sector" filterBy="#{company.sector}" filterMatchMode="contains">  
-                                            <h:outputText value="#{company.sector}" />  
-                                        </p:column>                             
-
-                                        <p:column headerText="Last Sale" sortBy="#{company.lastSale}">  
-                                            <h:outputText value="#{company.lastSale}" />  
-                                        </p:column>  
-
-                                        <p:column>  
-                                            <f:facet name="header">  
-                                                <h:outputText value="Capital" />  
-                                            </f:facet>  
-                                            <h:outputText value="#{company.marketCap}" />  
-                                        </p:column>
-
-                                        <p:column>  
-                                            <f:facet name="header">  
-                                                <h:outputText value="IPO Year" />  
-                                            </f:facet>  
-                                            <h:outputText value="#{company.ipoYear}" />  
-                                        </p:column>
-
-                                        <p:column>  
-                                            <f:facet name="header">  
-                                                <h:outputText value="Industry" />  
-                                            </f:facet>  
-                                            <h:outputText value="#{company.industry}" />  
-                                        </p:column>
-
-                                        <p:column>
+                                    <p:column headerText="Code" 
+                                              filterBy="#{company.code}"
+                                              filterMatchMode="contains" 
+                                              sortBy="#{company.code}"
+                                              width="5%"
+                                              style="width:5%">
+                                        <h:form>
                                             <h:outputLink value="#{homeBean.companyLink}">
                                                 <f:param name="id" value="#{company.id}" />
-                                                <h:outputText value="Details" />
+                                                <h:outputText value="#{company.code}" />
                                             </h:outputLink>
+                                        </h:form>
+                                    </p:column>  
+
+                                    <p:column headerText="Nom" 
+                                              filterBy="#{company.name}" 
+                                              filterMatchMode="contains"
+                                              width="15%"
+                                              style="width:15%">  
+                                        <h:outputText value="#{company.name}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Secteur" 
+                                              filterBy="#{company.sector}" 
+                                              filterMatchMode="contains"
+                                              width="10%"
+                                              style="width:10%">  
+                                        <h:outputText value="#{company.sector}" />  
+                                    </p:column>                             
+
+                                    <p:column headerText="Dernière vente" 
+                                              sortBy="#{company.lastSale}"
+                                              width="3%"
+                                              style="width:3%">  
+                                        <h:outputText value="#{company.lastSale}" />  
+                                    </p:column>  
+
+                                    <p:column width="10%"
+                                              style="width:10%">  
+                                        <f:facet name="header">  
+                                            <h:outputText value="Capital" />  
+                                        </f:facet>  
+                                        <h:outputText value="#{company.marketCap}" />  
+                                    </p:column>
+
+                                    <p:column width="3%" style="width:3%">  
+                                        <f:facet name="header">  
+                                            <h:outputText value="Année IPO" />  
+                                        </f:facet>  
+                                        <h:outputText value="#{company.ipoYear}" />  
+                                    </p:column>
+
+                                    <p:column width="5%" style="width:5%">  
+                                        <f:facet name="header">  
+                                            <h:outputText value="Industrie" />  
+                                        </f:facet>  
+                                        <h:outputText value="#{company.industry}" />  
+                                    </p:column>
+
+                                    <c:if test="#{user != null and user['class'].simpleName == 'Client'}">
+                                        <p:column styleClass="actions" width="20%" style="width:20%">
+                                            <p:dialog id="buyDialog" header="Acheter des actions" resizable="false" widgetVar="buyDialog">  
+                                                <h:form >
+                                                    <p:inputText required="true" value="#{transactionBean.numberOfActions}" 
+                                                                 converter="javax.faces.Integer" />
+                                                    <h:inputHidden required="true" value="#{transactionBean.companyId}" 
+                                                                     converter="javax.faces.Integer" />
+                                                    <p:commandButton value="Confirmer" type="submit" actionListener="#{transactionBean.buyActions}"/>
+                                                </h:form>
+                                            </p:dialog>
+                                            <h:form>
+                                                <p:commandButton id="buttonToBuy" value="Acheter" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="buyDialog.show()" />
+                                            </h:form> 
+                                            <c:if test="#{transactionBean.getUserActionsInCompany(company) > 0}"> 
+                                                <p:dialog id="sellDialog" header="Vendre des actions" resizable="false" widgetVar="sellDialog">  
+                                                    <h:form>
+                                                        <p:inputText required="true" value="#{transactionBean.numberOfActions}" converter="javax.faces.Integer" />
+                                                        <h:inputHidden required="true" value="#{transactionBean.companyId}" 
+                                                                     converter="javax.faces.Integer" />
+                                                        <p:commandButton value="Confirmer" actionListener="#{transactionBean.sellActions}" type="submit" ajax="false"/>
+                                                    </h:form>
+                                                </p:dialog>
+
+                                                <h:form>
+                                                    <p:commandButton id="buttonToSell" value="Vendre" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="sellDialog.show()"/>
+                                                </h:form>                                                
+                                            </c:if>
+                                            <c:if test="#{user.type == 'PRIVILEGED'}">
+                                                <p:dialog header="Spéculation" widgetVar="speculateDialog">  
+                                                    <h:form>
+                                                        <p:inputText required="true" value="#{transactionBean.numberOfActions}" 
+                                                                     converter="javax.faces.Integer" />
+                                                        <h:inputHidden required="true" value="#{transactionBean.companyId}" 
+                                                                     converter="javax.faces.Integer" />
+                                                        <p:commandButton value="Confirmer" type="submit" actionListener="#{transactionBean.speculate}" ajax="false"/>
+                                                    </h:form>
+                                                </p:dialog>
+                                                <h:form>
+                                                    <p:commandButton id="buttonToSpeculate" value="Spéculer" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="speculateDialog.show()"/>
+                                                </h:form> 
+                                            </c:if>
                                         </p:column>
-                                    </p:dataTable>
-                                </p:tab>
-                            </c:forEach>
-                        </p:accordionPanel>
-                    </h:form>
+                                    </c:if>
+                                </p:dataTable>
+                            </p:tab>
+                        </c:forEach>
+                    </p:accordionPanel>
                 </section>
             </section>
             <ui:include src="/WEB-INF/footer.xhtml" />

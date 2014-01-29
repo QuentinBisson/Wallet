@@ -36,13 +36,17 @@ public class CompanyBean implements Serializable {
         if (params.containsKey("id")) {
             id = new Long(params.get("id"));
             company = companyEjb.findById(id);
+            try {
+                companyEjb.realTimeUpdate(company);
+            } catch (IOException ex) {
+                Logger.getLogger(CompanyBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (!FacesContext.getCurrentInstance()
                     .getPartialViewContext().isAjaxRequest()) {
                 try {
                     if (company == null) {
                         context.redirect(context.getRequestContextPath() + "index.xtml");
                     }
-                    companyEjb.realTimeUpdate(company);
                 } catch (IOException ex1) {
                     Logger.getLogger(HomeBean.class.getName()).log(Level.SEVERE, null, ex1);
                 }
@@ -64,7 +68,7 @@ public class CompanyBean implements Serializable {
         companyHistorySeries.setLabel(company.getCode());
         List<History> history = company.getHistory();
         int size = 60;
-        if (history.size() < 60) {
+        if (history.size() < size) {
             size = history.size();
         }
         for (int i = size; i >= 0; i--) {

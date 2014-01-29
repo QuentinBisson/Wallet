@@ -3,7 +3,9 @@ package jee.wallet.model.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Wallet implements Serializable {
@@ -71,5 +73,28 @@ public class Wallet implements Serializable {
         return super.hashCode();
     }
 
+    public List<DisplayableTransaction> getDisplayableTransactions() {
+        List<DisplayableTransaction> result = new ArrayList<DisplayableTransaction>();
+        for (Transaction t : transactions) {
+            Company c = t.getStockOptions().get(0).getCompany();
+            int actions = t.getStockOptions().size();
+            DisplayableTransaction dt = new DisplayableTransaction(t.getId(), c, actions,
+                    c.getLastSale() - t.getPrice(), t.getTransactionType());
+            result.add(dt);
+        }
+        return result;
+    }
+
+    public List<StockOption> getOptionsForCompany(Company c) {
+        List<StockOption> options = new ArrayList<StockOption>();
+        for (Transaction t : transactions) {
+            Company tmp = t.getStockOptions().get(0)
+                    .getCompany();
+            if (c.equals(tmp) || c.getCode().equals(tmp.getCode())) {
+                options.addAll(t.getStockOptions());
+            }
+        }
+        return options;
+    }
 
 }

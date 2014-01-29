@@ -40,7 +40,7 @@ public class RegisterBean implements Serializable {
         boolean valid = true;
         if (!user.getConfirmationPassword().equals(user.getPassword())) {
             valid = false;
-            FacesContext.getCurrentInstance().addMessage(null, 
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "Erreur de validation",
                             "Les mots de passe ne sont pas identique"));

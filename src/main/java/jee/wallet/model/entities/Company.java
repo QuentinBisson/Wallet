@@ -4,7 +4,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,8 +49,8 @@ public class Company implements Serializable {
     private String summaryQuote;
     @OneToMany
     private List<History> history;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<StockExchange> stockExchanges;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private StockExchange stockExchange;
     @OneToMany(cascade = CascadeType.ALL)
     private List<StockOption> options;
 
@@ -62,7 +61,6 @@ public class Company implements Serializable {
     public Company(String line) {
         history = new ArrayList<History>();
         options = new ArrayList<StockOption>();
-        stockExchanges = new ArrayList<StockExchange>();
 
         if (StringUtils.isNotBlank(line)) {
             List<String> i = Lists.newArrayList(
@@ -201,14 +199,14 @@ public class Company implements Serializable {
         this.options = options;
     }
 
-    public List<StockExchange> getStockExchanges() {
-        return stockExchanges;
+    public StockExchange getStockExchange() {
+        return stockExchange;
     }
 
-    public void setStockExchanges(List<StockExchange> stockExchanges) {
-        this.stockExchanges = stockExchanges;
+    public void setStockExchange(StockExchange stockExchange) {
+        this.stockExchange = stockExchange;
     }
-
+    
     @Override
     public String toString() {
         String result = getClass().getSimpleName() + " ";

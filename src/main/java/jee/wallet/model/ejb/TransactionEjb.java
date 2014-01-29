@@ -1,5 +1,6 @@
 package jee.wallet.model.ejb;
 
+import java.io.IOException;
 import jee.wallet.model.entities.Transaction;
 
 import javax.ejb.EJB;
@@ -11,19 +12,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
+import jee.wallet.model.entities.Company;
+import jee.wallet.model.entities.OperationType;
 
 @Stateless
 @LocalBean
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class TransactionEjb extends AbstractEjb implements CrudInterface<Transaction> {
+public class TransactionEjb extends AbstractEjb implements TransactionEjbInterface {
+    
     @EJB
     private StockOptionEjb stockOptionEjb;
-
+    @EJB
+    private CompanyEjb companyEjb;
     private static final String SELECT_BY_ID = "SELECT t FROM Transaction t WHERE t.id=:id";
     private static final String SELECT_ALL = "SELECT t FROM Transaction t";
     private static final String COUNT_ALL = "SELECT COUNT(t) FROM Transaction t";
+    public static final Double TRANSACTION_FEES = 0.05;
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void create(Transaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("The transaction must be not null.");
@@ -37,6 +43,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Transaction findById(long id) {
         return (Transaction) em.createQuery(SELECT_BY_ID)
                 .setParameter("id", id)
@@ -44,6 +51,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Transaction> findAll(int offset, int limit) {
         return (List<Transaction>) em.createQuery(SELECT_ALL)
                 .setFirstResult(offset)
@@ -52,6 +60,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public int countAll() {
         return ((Number) em.createQuery(COUNT_ALL)
                 .getSingleResult())
@@ -79,6 +88,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Transaction> search(Transaction transaction, int offset, int limit) {
         return (List<Transaction>) createSearchQuery(SELECT_ALL, transaction)
                 .setFirstResult(offset)
@@ -87,6 +97,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public int countSearch(Transaction transaction) {
         return ((Number) createSearchQuery(COUNT_ALL, transaction)
                 .getSingleResult())
@@ -94,6 +105,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Transaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("The transaction must be not null.");
@@ -111,6 +123,7 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(long id) {
         if (id < 0) {
             throw new IllegalArgumentException("The transaction does not exist.");
@@ -120,11 +133,24 @@ public class TransactionEjb extends AbstractEjb implements CrudInterface<Transac
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Transaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("The transaction does not exist.");
         }
         em.remove(transaction);
         em.flush();
+    }
+    
+    public static double computeTransactionValue(Transaction t) throws IOException {
+        Company c = t.getStockOptions().get(0).getCompany();
+        double total = 0;
+        double optionsValue = c.getLastSale() * t.getStockOptions().size();
+        if (OperationType.PURCHASE == t.getOperationType()) {
+            total += optionsValue;
+        } else {
+            total -= optionsValue;
+        }
+        return total;
     }
 }

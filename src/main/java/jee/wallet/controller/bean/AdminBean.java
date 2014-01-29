@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jee.wallet.controller.bean;
 
 import java.io.IOException;
@@ -21,10 +16,6 @@ import jee.wallet.model.entities.Client;
 import jee.wallet.model.entities.ClientType;
 import org.primefaces.event.RowEditEvent;
 
-/**
- *
- * @author David
- */
 public class AdminBean implements Serializable {
 
     private List<Client> clients;
@@ -61,18 +52,18 @@ public class AdminBean implements Serializable {
         FacesMessage msg = new FacesMessage("Mise à jour annulé", "");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
-    public ClientType[] getTypeUser(){
+
+    public ClientType[] getTypeUser() {
         return ClientType.values();
     }
 
     public List<Client> getClients() {
         return clients;
     }
-    
-    public void showDetail(long id){
+
+    public void showDetail(long id) {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet/admin/adminDetailUser.xhtml?id="+id);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Wallet/admin/adminDetailUser.xhtml?id=" + id);
         } catch (IOException ex) {
             Logger.getLogger(AdminBean.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -7,8 +7,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="Wallet_Transaction")
+@Table(name = "Wallet_Transaction")
 public class Transaction implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -18,8 +19,10 @@ public class Transaction implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date transactionDate;
     @Enumerated
-    private OperationType type;
-    @OneToMany
+    private OperationType operationType;
+    @Enumerated
+    private TransactionType transactionType;
+    @OneToMany(cascade=CascadeType.ALL)
     private List<StockOption> stockOptions;
 
     public Transaction() {
@@ -58,24 +61,34 @@ public class Transaction implements Serializable {
         this.stockOptions = stockOptions;
     }
 
-    public OperationType getType() {
-        return type;
+    public OperationType getOperationType() {
+        return operationType;
     }
 
-    public void setType(OperationType type) {
-        this.type = type;
+    public void setOperationType(OperationType type) {
+        this.operationType = type;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Transaction)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Transaction)) {
+            return false;
+        }
 
         Transaction that = (Transaction) o;
 
-        if (!id.equals(that.id)) return false;
-
-        return true;
+        return id.equals(that.id);
     }
 
     @Override
@@ -86,8 +99,9 @@ public class Transaction implements Serializable {
     @Override
     public String toString() {
         String result = getClass().getSimpleName() + " ";
-        if (id != null)
+        if (id != null) {
             result += "id: " + id;
+        }
         return result;
     }
 }

@@ -3,7 +3,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <f:view contentType="text/html">
         <h:head>
@@ -15,16 +15,106 @@
 
         <h:body>
             <ui:include src="/WEB-INF/header.xhtml" />
-            <p:panel id="panel" header="Compte bancaire" style="margin-bottom:10px;">
+            <p:panel id="account" header="Compte bancaire" style="margin-bottom:10px;">
                 <h:form>
-                    <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}€" id="balance"/> </h3>
+                    <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}$" id="balance"/> </h3>
                     <p:outputLabel value="Valeur :" for="value"/>
                     <p:inputText value="#{userBean.balance}" id="value" /> <br/> <br/>
                     <p:commandButton value="Crediter" actionListener="#{userBean.creditListener}" update="balance"/>
                     <p:commandButton value="Debiter" actionListener="#{userBean.debitListener}" update="balance"/>
                 </h:form>
             </p:panel>
-            
+            <p:panel id="wallet" header="Mes Actions" style="margin-bottom:10px;">
+                <h:form>
+                    <h3>Valeur du portefeuille : <h:outputText value="#{userBean.total}$" id="totalInWallet"/> </h3>
+                </h:form>
+                <p:dataTable var="transaction" value="#{userBean.transactions}"
+                             paginator="true" rows="20"  
+                             paginatorPosition="bottom"
+                             style="width:50%">  
+                    <p:column headerText="Nom" 
+                              filterBy="#{transaction.company.name}" 
+                              filterMatchMode="contains"
+                              width="70%">  
+                        <h:outputText value="#{transaction.company.name}" />  
+                    </p:column>
+
+                    <p:column headerText="Actions" 
+                              width="10%">  
+                        <h:outputText value="#{transaction.actions}" />  
+                    </p:column>
+
+                    <p:column headerText="Gains ou perte"
+                              width="20%">
+                        <c:choose>
+                            <c:when test="#{transaction.total >= 0}">
+                                <h:outputText styleClass="gain" value="#{transaction.total}" />  
+                            </c:when>
+
+                            <c:otherwise>
+                                <h:outputText styleClass="loss" value="#{transaction.total}" /> 
+                            </c:otherwise>
+                        </c:choose>
+                    </p:column>
+                    <p:column styleClass="actions">
+                            <p:dialog header="Vendre des actions" widgetVar="sellDlg">  
+                                <h:form>
+                                    <h:messages></h:messages>
+                                    <p:inputText id="fieldSell" required="true" value="#{transactionBean.numberOfActions}" converter="javax.faces.Integer" />
+                                    <h:commandButton value="Confirmer" actionListener="#{transactionBean.sellActions}" type="submit">
+                                        <f:param name="companyid" value="#{transaction.company.id}" />
+                                    </h:commandButton>
+                                </h:form>  
+                            </p:dialog>
+                        <h:form>
+                            <p:commandButton value="Vendre" onclick="sellDlg.show()"/>
+                        </h:form>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+            <c:if test="#{user != null and user['class'].simpleName == 'Client' 
+                          and user.type == 'PRIVILEGED'}">
+                <p:panel id="speculation" header="Spéculation à la baisse" style="margin-bottom:10px;">
+                    <p:dataTable var="transaction" value="#{userBean.speculations}"
+                                 paginator="true" rows="20"  
+                                 paginatorPosition="bottom"
+                                 style="width:50%"> 
+
+                        <p:column headerText="Nom" 
+                                  filterBy="#{transaction.companyName}" 
+                                  filterMatchMode="contains"
+                                  width="70%">  
+                            <h:outputText value="#{transaction.companyName}" />  
+                        </p:column>
+
+                        <p:column headerText="Actions" 
+                                  width="10%">  
+                            <h:outputText value="#{transaction.actions}" />  
+                        </p:column>
+
+                        <p:column headerText="Gains ou perte"
+                                  width="20%">
+                            <c:choose>
+                                <c:when test="#{transaction.total >= 0}">
+                                    <h:outputText styleClass="gain" value="#{transaction.total}" />  
+                                </c:when>
+
+                                <c:otherwise>
+                                    <h:outputText styleClass="loss" value="#{transaction.total}" /> 
+                                </c:otherwise>
+                            </c:choose>
+                        </p:column>
+                        <p:column styleClass="actions">
+                            <h:form>
+                                <p:commandButton value="Annuler la transaction" 
+                                                 actionListener="#{userBean.cancelTransactionListener(transaction.transactionId)}" />
+                            </h:form>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+            </c:if>
             <p:panel id="panel_2" header="Fermer son compte" style="margin-bottom:10px;">
                 <h:form>
                     <p:commandButton value="Fermer son compte" actionListener="#{userBean.closeAccount()}" type="submit" styleClass="ui-priority-primary"/>
