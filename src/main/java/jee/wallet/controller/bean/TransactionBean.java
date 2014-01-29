@@ -32,8 +32,6 @@ public class TransactionBean {
     private CompanyEjb companyEjb;
 
     private Client client;
-    private long companyId;
-    private int numberOfActions;
 
     @PostConstruct
     public void init() {
@@ -56,10 +54,15 @@ public class TransactionBean {
         }
     }
 
-    public long getUserActionsInCompany(Company company) {
+    public long getUserActionsInCompany(Object companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId is null");
+        }
+        System.out.println(companyId);
+        System.out.println(companyId.getClass());
         long actions = 0;
         for (Transaction t : client.getWallet().getTransactions()) {
-            if (t.getStockOptions().get(0).getCompany().equals(company)) {
+            if (t.getStockOptions().get(0).getCompany().getId() == companyId) {
                 if (OperationType.PURCHASE == t.getOperationType()) {
                     actions += t.getStockOptions().size();
                 } else {
@@ -68,55 +71,6 @@ public class TransactionBean {
             }
         }
         return actions;
-    }
-
-    public int getNumberOfActions() {
-        return numberOfActions;
-    }
-
-    public void setNumberOfActions(int value) {
-        this.numberOfActions = value;
-    }
-
-    public void buyActions(Long id) {
-        if (companyId < 0) {
-            throw new IllegalArgumentException("id < 0");
-        }
-        System.out.println("id : "+id);
-        Company company = companyEjb.findById(companyId);
-        System.out.println(company.getName());
-        clientEjb.buyStockOptions(client, company, numberOfActions, TransactionType.NORMAL);
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez acheter "
-                + numberOfActions
-                + " pour l'entreprise "
-                + company.getName(), company.getName() + " : " + numberOfActions + " actions");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void sellActions(ActionEvent event) {
-        if (companyId < 0) {
-            throw new IllegalArgumentException("id < 0");
-        }
-        System.out.println(companyId);
-        Company company = companyEjb.findById(companyId);
-        clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.NORMAL);
-    }
-
-    public void speculate(ActionEvent event) {
-        if (companyId < 0) {
-            throw new IllegalArgumentException("id < 0");
-        }
-        System.out.println(companyId);
-        Company company = companyEjb.findById(companyId);
-        clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);
-    }
-
-    public long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(long companyId) {
-        this.companyId = companyId;
     }
 
 }

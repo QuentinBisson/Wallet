@@ -27,6 +27,8 @@ import jee.wallet.model.entities.Wallet;
 public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
 
     @EJB
+    private StockOptionEjb stockOptionEjb;
+    @EJB
     private WalletEjb walletEjb;
     @EJB
     private CompanyEjb companyEjb;
@@ -106,7 +108,6 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
             if (StringUtils.isNotBlank(client.getLastName())) {
                 sb.append(separator).append("c.lastname = %:lastname%");
                 params.put("lastname", client.getLastName());
-                separator = " AND ";
             }
         }
 
@@ -194,6 +195,7 @@ public class ClientEjb extends AbstractEjb implements ClientEjbInterface {
             option.setCompany(company);
             company.getOptions().add(option);
             company.getStockExchange().getOptions().add(option);
+            stockOptionEjb.create(option);
             options.add(option);
         }
         walletEjb.buyStockOptions(client.getWallet(), options, type);

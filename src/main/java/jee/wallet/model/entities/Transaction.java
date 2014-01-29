@@ -22,7 +22,7 @@ public class Transaction implements Serializable {
     private OperationType operationType;
     @Enumerated
     private TransactionType transactionType;
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade={CascadeType.REMOVE, CascadeType.MERGE})
     private List<StockOption> stockOptions;
 
     public Transaction() {

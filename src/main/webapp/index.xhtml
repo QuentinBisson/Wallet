@@ -96,7 +96,7 @@
                                                     <h:outputText value="Acheter" />
                                                 </h:outputLink>
                                                 <span> </span>
-                                                <c:if test="#{transactionBean.getUserActionsInCompany(company) > 0}"> 
+                                                <c:if test="#{transactionBean.getUserActionsInCompany(1) > 0}"> 
                                                     <h:outputLink value="#{homeBean.buyAction}">
                                                         <f:param name="id" value="#{company.id}" />
                                                         <f:param name="sell" value="true" />

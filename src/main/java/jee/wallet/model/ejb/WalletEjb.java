@@ -163,7 +163,7 @@ public class WalletEjb extends AbstractEjb implements WalletEjbInterface {
             withdraw(wallet, -companyEjb.getAmountForActions(c, options.size(),
                 OperationType.PURCHASE));
         } else {
-            //TODO find the right transaction for sup
+            //TODO find the right transaction for suply
             supply(wallet, companyEjb.getAmountForActions(c, options.size(),
                 OperationType.SALE));
             withdraw(wallet, -companyEjb.getAmountForActions(c, options.size(),
