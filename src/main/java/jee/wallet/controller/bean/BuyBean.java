@@ -47,7 +47,7 @@ public class BuyBean {
         if (client.getType() == ClientType.PRIVILEGED) {
             speculate = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("speculate"));
         } else {
-            speculate = true;
+            speculate = false;
         }
     }
 

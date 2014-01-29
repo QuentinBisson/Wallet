@@ -20,7 +20,10 @@ public class AdminDetailUser implements Serializable {
 
     public AdminDetailUser() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        id = Long.parseLong(facesContext.getExternalContext().getRequestParameterMap().get("id"));
+        String idString = facesContext.getExternalContext().getRequestParameterMap().get("id");
+        if (idString != null) {
+            id = Long.parseLong(idString);
+        }
     }
 
     @PostConstruct

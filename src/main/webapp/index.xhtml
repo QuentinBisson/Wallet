@@ -94,6 +94,7 @@
                                                     <f:param name="speculate" value="false" />
                                                     <h:outputText value="Acheter" />
                                                 </h:outputLink>
+                                                <span> </span>
                                                 <c:if test="#{transactionBean.getUserActionsInCompany(company) > 0}"> 
                                                     <h:outputLink value="#{homeBean.buyAction}">
                                                         <f:param name="id" value="#{company.id}" />
@@ -102,6 +103,7 @@
                                                         <f:param name="speculate" value="false" />
                                                         <h:outputText value="Vendre" />
                                                     </h:outputLink>
+                                                    <span> </span>
                                                 </c:if>
                                                 <c:if test="#{user.type == 'PRIVILEGED'}">
                                                     <h:outputLink value="#{homeBean.buyAction}">
@@ -111,6 +113,7 @@
                                                         <f:param name="speculate" value="true" />
                                                         <h:outputText value="Speculer" />
                                                     </h:outputLink>
+                                                    <span> </span>
                                                 </c:if>
                                             </p:column>
                                         </c:if>

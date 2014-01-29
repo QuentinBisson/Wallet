@@ -15,6 +15,7 @@
 
         <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
+            <br/>
             <p:panel id="account" header="Compte bancaire" style="margin-bottom:10px;">
                 <h:form>
                     <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}$" id="balance"></h:outputText> </h3>
@@ -92,7 +93,7 @@
                         </p:column>
 
 
-                        <p:column headerText="Nom sdfkljsdlfkjsdklfjslk" 
+                        <p:column headerText="Nom" 
                                   filterBy="#{transaction.company.name}" 
                                   filterMatchMode="contains"
                                   width="70%">  
