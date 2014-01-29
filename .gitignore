@@ -8,6 +8,7 @@
 *.war
 *.ear
 
+target/
 nbproject/private/
 build/
 nbbuild/
@@ -64,3 +65,6 @@ $RECYCLE.BIN/
 *.msp
 
 target/
+.project
+.classpath
+*.ucls
