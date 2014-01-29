@@ -86,38 +86,32 @@
                                             <h:outputText value="#{company.industry}" />  
                                         </p:column>
 
-                                        <c:if test="#{user != null and user['class'].simpleName == 'Client'}">
-                                            <p:column styleClass="actions" width="5%" style="width:5%">
-                                                <h:outputLink value="#{homeBean.buyAction}">
-                                                    <f:param name="id" value="#{company.id}" />
-                                                    <f:param name="sell" value="false" />
-                                                    <f:param name="buy" value="true" />
-                                                    <f:param name="speculate" value="false" />
-                                                    <h:outputText value="Acheter" />
-                                                </h:outputLink>
-                                                <span> </span>
-                                                <c:if test="#{transactionBean.getUserActionsInCompany(1) > 0}"> 
-                                                    <h:outputLink value="#{homeBean.buyAction}">
-                                                        <f:param name="id" value="#{company.id}" />
-                                                        <f:param name="sell" value="true" />
-                                                        <f:param name="buy" value="false" />
-                                                        <f:param name="speculate" value="false" />
-                                                        <h:outputText value="Vendre" />
-                                                    </h:outputLink>
-                                                    <span> </span>
-                                                </c:if>
-                                                <c:if test="#{user.type == 'PRIVILEGED'}">
-                                                    <h:outputLink value="#{homeBean.buyAction}">
-                                                        <f:param name="id" value="#{company.id}" />
-                                                        <f:param name="sell" value="false" />
-                                                        <f:param name="buy" value="false" />
-                                                        <f:param name="speculate" value="true" />
-                                                        <h:outputText value="Speculer" />
-                                                    </h:outputLink>
-                                                    <span> </span>
-                                                </c:if>
-                                            </p:column>
-                                        </c:if>
+                                        <p:column styleClass="actions" width="5%" style="width:5%" rendered="#{user != null and user['class'].simpleName == 'Client'}">
+                                            <h:outputLink value="#{homeBean.buyAction}">
+                                                <f:param name="id" value="#{company.id}" />
+                                                <f:param name="sell" value="false" />
+                                                <f:param name="buy" value="true" />
+                                                <f:param name="speculate" value="false" />
+                                                <h:outputText value="Acheter" />
+                                            </h:outputLink>
+                                            <span> </span>
+                                            <h:outputLink value="#{homeBean.buyAction}" rendered="#{transactionBean.getUserActionsInCompany(company.id) > 0}">
+                                                <f:param name="id" value="#{company.id}" />
+                                                <f:param name="sell" value="true" />
+                                                <f:param name="buy" value="false" />
+                                                <f:param name="speculate" value="false" />
+                                                <h:outputText value="Vendre" />
+                                            </h:outputLink>
+                                            <span> </span>
+                                            <h:outputLink value="#{homeBean.buyAction}" rendered="#{user.type == 'PRIVILEGED'}">
+                                                <f:param name="id" value="#{company.id}" />
+                                                <f:param name="sell" value="false" />
+                                                <f:param name="buy" value="false" />
+                                                <f:param name="speculate" value="true" />
+                                                <h:outputText value="Speculer" />
+                                            </h:outputLink>
+                                            <span> </span>                                            
+                                        </p:column>
                                     </p:dataTable>
                                 </p:tab>
                             </c:forEach>

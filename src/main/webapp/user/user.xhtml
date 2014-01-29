@@ -18,7 +18,11 @@
             <br/>
             <p:panel id="account" header="Compte bancaire" style="margin-bottom:10px;">
                 <h:form>
-                    <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}$" id="balance"></h:outputText> </h3>
+                    <h3>Solde du compte : 
+                        <h:outputText value="#{user.wallet.balance}" id="balance">
+                            <f:convertNumber maxFractionDigits="2" type="currency" currencySymbol="$"/>
+                        </h:outputText> 
+                    </h3>
                     <p:outputLabel value="Valeur :" for="value"/>
                     <p:inputText value="#{userBean.balance}" id="value" /> <br/> <br/>
                     <p:commandButton value="Crediter" actionListener="#{userBean.creditListener}" update="balance"/>
@@ -27,7 +31,11 @@
             </p:panel>
             <p:panel id="wallet" header="Mes Actions" style="margin-bottom:10px;">
                 <h:form>
-                    <h3>Valeur du portefeuille : <h:outputText value="#{userBean.total}$" id="totalInWallet"></h:outputText> </h3>
+                    <h3>Valeur du portefeuille : 
+                        <h:outputText value="#{userBean.total}" id="totalInWallet">
+                            <f:convertNumber maxFractionDigits="2" type="currency" currencySymbol="$"/>
+                        </h:outputText> 
+                    </h3>
                 </h:form>
                 <p:dataTable var="transaction" value="#{userBean.transactions}"
                              paginator="true" rows="20"  

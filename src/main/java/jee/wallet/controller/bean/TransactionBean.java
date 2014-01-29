@@ -1,7 +1,7 @@
 package jee.wallet.controller.bean;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -9,15 +9,12 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import jee.wallet.model.ejb.ClientEjb;
 import jee.wallet.model.ejb.CompanyEjb;
 import jee.wallet.model.entities.Administrator;
 import jee.wallet.model.entities.Client;
-import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.OperationType;
 import jee.wallet.model.entities.Transaction;
-import jee.wallet.model.entities.TransactionType;
 
 /**
  *
@@ -32,6 +29,7 @@ public class TransactionBean {
     private CompanyEjb companyEjb;
 
     private Client client;
+    private List<Transaction> transactions;
 
     @PostConstruct
     public void init() {
@@ -45,6 +43,7 @@ public class TransactionBean {
                 }
             }
             client = (Client) context.getSessionMap().get("user");
+            transactions = client.getWallet().getTransactions();
         } else {
             try {
                 context.redirect(context.getRequestContextPath() + "index.xtml");
@@ -56,12 +55,12 @@ public class TransactionBean {
 
     public long getUserActionsInCompany(Object companyId) {
         if (companyId == null) {
-            throw new IllegalArgumentException("companyId is null");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "L'entreprise n'existe pas", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-        System.out.println(companyId);
-        System.out.println(companyId.getClass());
         long actions = 0;
-        for (Transaction t : client.getWallet().getTransactions()) {
+        for (Transaction t : transactions) {
             if (t.getStockOptions().get(0).getCompany().getId() == companyId) {
                 if (OperationType.PURCHASE == t.getOperationType()) {
                     actions += t.getStockOptions().size();

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jee.wallet.controller.bean;
 
 import javax.annotation.PostConstruct;
@@ -17,10 +12,6 @@ import jee.wallet.model.entities.ClientType;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.TransactionType;
 
-/**
- *
- * @author Administrateur
- */
 public class BuyBean {
 
     private long id;
@@ -39,13 +30,13 @@ public class BuyBean {
 
     public BuyBean() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        id = Long.parseLong(facesContext.getExternalContext().getRequestParameterMap().get("id"));
-        sell = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("sell"));
-        buy = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("buy"));
+        ExternalContext context = facesContext.getExternalContext();
+        id = Long.parseLong(context.getRequestParameterMap().get("id"));
+        sell = Boolean.parseBoolean(context.getRequestParameterMap().get("sell"));
+        buy = Boolean.parseBoolean(context.getRequestParameterMap().get("buy"));
         client = (Client) context.getSessionMap().get("user");
         if (client.getType() == ClientType.PRIVILEGED) {
-            speculate = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("speculate"));
+            speculate = Boolean.parseBoolean(context.getRequestParameterMap().get("speculate"));
         } else {
             speculate = false;
         }
@@ -85,8 +76,8 @@ public class BuyBean {
 
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
-      public void speculateAction() {
+
+    public void speculateAction() {
         FacesMessage msg = null;
         try {
             clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);
