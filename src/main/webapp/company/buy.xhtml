@@ -10,12 +10,12 @@
         <h:head>
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
-                <title>Detail : #{companyBean.company.name}</title>
+                <title>Detail : #{buyBean.company.name}</title>
                 <link rel="stylesheet" type="text/css" href="/Wallet/jsfcrud.css" />
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
             <h:form>
 
@@ -31,14 +31,32 @@
                         <h:outputLabel value="Quantité :"/>
                         <p:inputText value="#{buyBean.numberOfActions}"/>                       
 
-                        <p:commandButton value="Confirmer" actionListener="#{buyBean.buyAction}" update="messages">
+                        <p:commandButton value="Acheter" actionListener="#{buyBean.buyAction}" update="messages" rendered="#{buyBean.buy}">
                             <f:param value="#{buyBean.company.id}" name="id"/>
+                            <f:param name="sell" value="#{buyBean.sell}" />
+                            <f:param name="buy" value="#{buyBean.buy}" />
+                            <f:param name="speculate" value="#{buyBean.speculate}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton value="Vendre" actionListener="#{buyBean.sellAction}" update="messages" rendered="#{buyBean.sell}">
+                            <f:param value="#{buyBean.company.id}" name="id"/>
+                            <f:param name="sell" value="#{buyBean.sell}" />
+                            <f:param name="buy" value="#{buyBean.buy}" />
+                            <f:param name="speculate" value="#{buyBean.speculate}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton value="Speculer" actionListener="#{buyBean.speculateAction}" update="messages" rendered="#{buyBean.speculate}">
+                            <f:param value="#{buyBean.company.id}" name="id"/>
+                            <f:param name="sell" value="#{buyBean.sell}" />
+                            <f:param name="buy" value="#{buyBean.buy}" />
+                            <f:param name="speculate" value="#{buyBean.speculate}" />
                         </p:commandButton>
                     </p:panelGrid>
                 </p:panel>
 
             </h:form>
             <ui:include src="/WEB-INF/footer.xhtml" />
+            <script src="../cluster.js"></script>
         </h:body>
 
     </f:view>

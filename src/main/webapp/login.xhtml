@@ -13,7 +13,7 @@
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
             <br/>
             <h:outputText class="result" value="#{requestScope['form'].result}" />
@@ -21,6 +21,7 @@
             <ui:include src="/WEB-INF/login/loginform.xhtml" />
             
             <ui:include src="/WEB-INF/footer.xhtml" />
+            <script src="cluster.js"></script>
         </h:body>
 
     </f:view>

@@ -15,7 +15,7 @@
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
             <f:event type="preRenderView" listener="#{companyBean.init}" />
             <h1 style="text-align: center; font-family: arial;"><h:outputText value="Historique et détails : #{companyBean.company.name}"/></h1>
@@ -90,6 +90,7 @@
                 </section>
             </section>
             <ui:include src="/WEB-INF/footer.xhtml" />
+            <script src="../cluster.js"></script>
         </h:body>
 
     </f:view>

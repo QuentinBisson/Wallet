@@ -5,24 +5,53 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <style>
+        #to_cluster.clustered {
+            margin-top: -25px;
+            margin-bottom: 10px;
+        }
+
+        #to_cluster {
+            text-indent: -9999px;
+            width: 1150px;
+            left: 50%;
+            margin-left: -575px;
+            font-family: sans-serif;
+            font-weight: bold;
+            line-height: 100%;
+            display: block;
+            font-size: 150px;
+            top: 100px;
+        }
+
+        .clustered svg {
+            position: absolute;
+            top: -12px;
+            left: 0;  
+        }
+    </style>
+
     <header class="main-header" style="margin:0px;">
+        <h5 id="to_cluster" style="margin-top:0px; margin-bottom: 0px;">Bourse</h5>
+        <br/>
         <nav class="menu">
             <h:form>
                 <p:menubar>
                     <p:menuitem value="Index" url="#{navBean.homeLink}"/>
                     <c:if test="#{user == null}">
-                        <p:menuitem value="Ouvrir un compte" url="#{navBean.registerLink}"/>
+                        <p:menuitem value="Ouvrir un compte" url="#{navBean.registerLink}"/> 
                         <p:menuitem value="Connexion" url="#{navBean.loginLink}"/>
                     </c:if>
-                    
+
                     <c:if test="#{user != null and user['class'].simpleName == 'Client'}">
                         <p:menuitem value="Mon portefeuille" url="#{navBean.walletLink}"/>
                     </c:if>
-                    
+
                     <c:if test="#{user != null and user['class'].simpleName == 'Administrator'}">
                         <p:menuitem value="Administration" url="#{navBean.adminLink}"/>
                     </c:if>
-                    
+
                     <c:if test="#{user != null}">
                         <f:facet name="options" >  
                             <p:commandLink value="Déconnexion( #{user.username} )" actionListener="#{loginBean.logout}"/> 

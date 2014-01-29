@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.ClientEjb;
 import jee.wallet.model.ejb.CompanyEjb;
 import jee.wallet.model.entities.Client;
+import jee.wallet.model.entities.ClientType;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.TransactionType;
 
@@ -27,6 +28,10 @@ public class BuyBean {
     private Client client;
     private int numberOfActions;
 
+    private boolean sell;
+    private boolean buy;
+    private boolean speculate;
+
     @EJB
     private CompanyEjb companyEjb;
     @EJB
@@ -35,10 +40,15 @@ public class BuyBean {
     public BuyBean() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        System.out.println("je passe la !!!!");
-        System.out.println("facesContext.getExternalContext().getRequestParameterMap() " + facesContext.getExternalContext().getRequestParameterMap());
         id = Long.parseLong(facesContext.getExternalContext().getRequestParameterMap().get("id"));
+        sell = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("sell"));
+        buy = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("buy"));
         client = (Client) context.getSessionMap().get("user");
+        if (client.getType() == ClientType.PRIVILEGED) {
+            speculate = Boolean.parseBoolean(facesContext.getExternalContext().getRequestParameterMap().get("speculate"));
+        } else {
+            speculate = true;
+        }
     }
 
     @PostConstruct
@@ -47,13 +57,47 @@ public class BuyBean {
     }
 
     public void buyAction() {
+        FacesMessage msg = null;
+        try {
+            clientEjb.buyStockOptions(client, company, numberOfActions, TransactionType.NORMAL);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez acheter "
+                    + numberOfActions
+                    + " actions de l'entreprise "
+                    + company.getName(), "");
+        } catch (Exception e) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Solde du compte insuffisante", "");
+        }
 
-        System.out.println(company.getName());
-        clientEjb.buyStockOptions(client, company, numberOfActions, TransactionType.NORMAL);
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez acheter "
-                + numberOfActions
-                + " pour l'entreprise "
-                + company.getName(), company.getName() + " : " + numberOfActions + " actions");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void sellAction() {
+        FacesMessage msg = null;
+        try {
+            clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.NORMAL);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez vendu "
+                    + numberOfActions
+                    + " actions de l'entreprise "
+                    + company.getName(), "");
+        } catch (Exception e) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur lors de la vente", "");
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
+      public void SpeculateAction() {
+        FacesMessage msg = null;
+        try {
+            clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez spéculé "
+                    + numberOfActions
+                    + " actions de l'entreprise "
+                    + company.getName(), "");
+        } catch (Exception e) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur lors de la speculation", "");
+        }
+
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
@@ -67,6 +111,22 @@ public class BuyBean {
 
     public Company getCompany() {
         return company;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public boolean isSell() {
+        return sell;
+    }
+
+    public boolean isBuy() {
+        return buy;
+    }
+
+    public boolean isSpeculate() {
+        return speculate;
     }
 
 }

@@ -118,7 +118,7 @@ public class TransactionEjb extends AbstractEjb implements TransactionEjbInterfa
             throw new IllegalArgumentException("The transaction is invalid.");
         }
 
-        em.persist(transaction);
+        em.merge(transaction);
         em.flush();
     }
 

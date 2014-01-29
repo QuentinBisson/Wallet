@@ -13,11 +13,11 @@
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
             <p:panel id="account" header="Compte bancaire" style="margin-bottom:10px;">
                 <h:form>
-                    <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}$" id="balance"/> </h3>
+                    <h3>Solde du compte : <h:outputText value="#{user.wallet.balance}$" id="balance"></h:outputText> </h3>
                     <p:outputLabel value="Valeur :" for="value"/>
                     <p:inputText value="#{userBean.balance}" id="value" /> <br/> <br/>
                     <p:commandButton value="Crediter" actionListener="#{userBean.creditListener}" update="balance"/>
@@ -26,12 +26,19 @@
             </p:panel>
             <p:panel id="wallet" header="Mes Actions" style="margin-bottom:10px;">
                 <h:form>
-                    <h3>Valeur du portefeuille : <h:outputText value="#{userBean.total}$" id="totalInWallet"/> </h3>
+                    <h3>Valeur du portefeuille : <h:outputText value="#{userBean.total}$" id="totalInWallet"></h:outputText> </h3>
                 </h:form>
                 <p:dataTable var="transaction" value="#{userBean.transactions}"
                              paginator="true" rows="20"  
                              paginatorPosition="bottom"
                              style="width:50%">  
+                    
+                     <p:column headerText="Code" 
+                               filterBy="#{transaction.company.code}" 
+                              filterMatchMode="contains"
+                              width="70%">  
+                        <h:outputText value="#{transaction.company.code}" />  
+                    </p:column>
                     <p:column headerText="Nom" 
                               filterBy="#{transaction.company.name}" 
                               filterMatchMode="contains"
@@ -57,17 +64,14 @@
                         </c:choose>
                     </p:column>
                     <p:column styleClass="actions">
-                            <p:dialog header="Vendre des actions" widgetVar="sellDlg">  
-                                <h:form>
-                                    <h:messages></h:messages>
-                                    <p:inputText id="fieldSell" required="true" value="#{transactionBean.numberOfActions}" converter="javax.faces.Integer" />
-                                    <h:commandButton value="Confirmer" actionListener="#{transactionBean.sellActions}" type="submit">
-                                        <f:param name="companyid" value="#{transaction.company.id}" />
-                                    </h:commandButton>
-                                </h:form>  
-                            </p:dialog>
                         <h:form>
-                            <p:commandButton value="Vendre" onclick="sellDlg.show()"/>
+                            <h:outputLink value="#{homeBean.buyAction}">
+                                <f:param name="id" value="#{company.id}" />
+                                <f:param name="sell" value="true" />
+                                <f:param name="buy" value="false" />
+                                <f:param name="speculate" value="false" />
+                                <h:outputText value="Vendre" />
+                            </h:outputLink>
                         </h:form>
                     </p:column>
 
@@ -80,12 +84,19 @@
                                  paginator="true" rows="20"  
                                  paginatorPosition="bottom"
                                  style="width:50%"> 
-
-                        <p:column headerText="Nom" 
-                                  filterBy="#{transaction.companyName}" 
+                        <p:column headerText="Code" 
+                                  filterBy="#{transaction.company.code}" 
                                   filterMatchMode="contains"
                                   width="70%">  
-                            <h:outputText value="#{transaction.companyName}" />  
+                            <h:outputText value="#{transaction.company.code}" />  
+                        </p:column>
+
+
+                        <p:column headerText="Nom sdfkljsdlfkjsdklfjslk" 
+                                  filterBy="#{transaction.company.name}" 
+                                  filterMatchMode="contains"
+                                  width="70%">  
+                            <h:outputText value="#{transaction.company.name}" />  
                         </p:column>
 
                         <p:column headerText="Actions" 
@@ -121,6 +132,7 @@
                 </h:form>
             </p:panel>
             <ui:include src="/WEB-INF/footer.xhtml" />
+            <script src="../cluster.js"></script>
         </h:body>
 
     </f:view>

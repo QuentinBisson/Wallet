@@ -13,7 +13,7 @@
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
             <br/>
             <f:event type="preRenderView" listener="#{homeBean.init}" />
@@ -26,7 +26,7 @@
                                     <p:dataTable var="company" value="#{item.companies}"
                                                  paginator="true" rows="20"  
                                                  paginatorPosition="bottom"
-                                                 style="width:90%"> 
+                                                 style="width:100%"> 
 
                                         <p:column headerText="Code" 
                                                   filterBy="#{company.code}"
@@ -89,27 +89,28 @@
                                             <p:column styleClass="actions" width="20%" style="width:20%">
                                                 <h:outputLink value="#{homeBean.buyAction}">
                                                     <f:param name="id" value="#{company.id}" />
+                                                    <f:param name="sell" value="false" />
+                                                    <f:param name="buy" value="true" />
+                                                    <f:param name="speculate" value="false" />
                                                     <h:outputText value="Acheter" />
                                                 </h:outputLink>
-                                                <p:commandButton id="buttonToBuy" value="Acheter" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="buyDialog.show()" />
                                                 <c:if test="#{transactionBean.getUserActionsInCompany(company) > 0}"> 
-                                                    <p:dialog id="sellDialog" header="Vendre des actions" resizable="false" widgetVar="sellDialog">  
-                                                        <p:inputText required="true" value="#{transactionBean.numberOfActions}" converter="javax.faces.Integer" />
-                                                        <h:inputHidden required="true" value="#{transactionBean.companyId}" 
-                                                                       converter="javax.faces.Integer" />
-                                                        <p:commandButton value="Confirmer" actionListener="#{transactionBean.sellActions}" type="submit" ajax="false"/>
-                                                    </p:dialog>
-                                                    <p:commandButton id="buttonToSell" value="Vendre" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="sellDialog.show()"/>
+                                                    <h:outputLink value="#{homeBean.buyAction}">
+                                                        <f:param name="id" value="#{company.id}" />
+                                                        <f:param name="sell" value="true" />
+                                                        <f:param name="buy" value="false" />
+                                                        <f:param name="speculate" value="false" />
+                                                        <h:outputText value="Vendre" />
+                                                    </h:outputLink>
                                                 </c:if>
                                                 <c:if test="#{user.type == 'PRIVILEGED'}">
-                                                    <p:dialog header="Spéculation" widgetVar="speculateDialog">  
-                                                        <p:inputText required="true" value="#{transactionBean.numberOfActions}" 
-                                                                     converter="javax.faces.Integer" />
-                                                        <h:inputHidden required="true" value="#{transactionBean.companyId}" 
-                                                                       converter="javax.faces.Integer" />
-                                                        <p:commandButton value="Confirmer" type="submit" actionListener="#{transactionBean.speculate}" ajax="false"/>
-                                                    </p:dialog>
-                                                    <p:commandButton id="buttonToSpeculate" value="Spéculer" actionListener="#{transactionBean.setCompanyId(company.id)}" oncomplete="speculateDialog.show()"/>
+                                                    <h:outputLink value="#{homeBean.buyAction}">
+                                                        <f:param name="id" value="#{company.id}" />
+                                                        <f:param name="sell" value="false" />
+                                                        <f:param name="buy" value="false" />
+                                                        <f:param name="speculate" value="true" />
+                                                        <h:outputText value="Speculer" />
+                                                    </h:outputLink>
                                                 </c:if>
                                             </p:column>
                                         </c:if>
@@ -121,6 +122,7 @@
                 </section>
             </section>
             <ui:include src="/WEB-INF/footer.xhtml" />
+            <script src="cluster.js"></script>
         </h:body>
     </f:view>
 </html>
