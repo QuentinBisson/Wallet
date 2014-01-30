@@ -41,9 +41,9 @@
                              paginator="true" rows="20"  
                              paginatorPosition="bottom"
                              style="width:50%">  
-                    
-                     <p:column headerText="Code" 
-                               filterBy="#{transaction.company.code}" 
+
+                    <p:column headerText="Code" 
+                              filterBy="#{transaction.company.code}" 
                               filterMatchMode="contains"
                               width="70%">  
                         <h:outputText value="#{transaction.company.code}" />  
@@ -58,6 +58,11 @@
                     <p:column headerText="Actions" 
                               width="10%">  
                         <h:outputText value="#{transaction.actions}" />  
+                    </p:column>
+
+                    <p:column headerText="type" 
+                              width="10%">  
+                        <h:outputText value="#{transaction.operationType}" />  
                     </p:column>
 
                     <p:column headerText="Gains ou perte"
@@ -111,6 +116,11 @@
                         <p:column headerText="Actions" 
                                   width="10%">  
                             <h:outputText value="#{transaction.actions}" />  
+                        </p:column>
+
+                        <p:column headerText="type" 
+                                  width="10%">  
+                            <h:outputText value="#{transaction.operationType}" />  
                         </p:column>
 
                         <p:column headerText="Gains ou perte"

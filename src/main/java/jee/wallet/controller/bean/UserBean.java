@@ -60,7 +60,7 @@ public class UserBean implements Serializable {
 
     public void buyTransactionListener(long transactionId) {
         Transaction t = transactionEjb.findById(transactionId);
-        
+        clientEjb.buyStockOptions(user, t.getStockOptions().get(0).getCompany(), t.getStockOptions().size(), TransactionType.PRIVILEGED);
     }
     
     public void cancelTransactionListener(long transactionId) {
