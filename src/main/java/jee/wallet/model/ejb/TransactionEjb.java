@@ -14,11 +14,12 @@ import java.util.Map;
 import javax.ejb.LocalBean;
 import jee.wallet.model.entities.Company;
 import jee.wallet.model.entities.OperationType;
+import jee.wallet.model.entities.TransactionType;
 
 @Stateless
 @LocalBean
 public class TransactionEjb extends AbstractEjb implements TransactionEjbInterface {
-    
+
     @EJB
     private StockOptionEjb stockOptionEjb;
     @EJB
@@ -141,15 +142,24 @@ public class TransactionEjb extends AbstractEjb implements TransactionEjbInterfa
         em.remove(transaction);
         em.flush();
     }
-    
+
     public static double computeTransactionValue(Transaction t) throws IOException {
         Company c = t.getStockOptions().get(0).getCompany();
         double total = 0;
         double optionsValue = c.getLastSale() * t.getStockOptions().size();
         if (OperationType.PURCHASE == t.getOperationType()) {
-            total += optionsValue;
+            if (t.getTransactionType() == TransactionType.PRIVILEGED) {
+                total -= optionsValue;
+            } else {
+                total += optionsValue;
+            }
         } else {
-            total -= optionsValue;
+            if (t.getTransactionType() == TransactionType.PRIVILEGED) {
+                total += optionsValue;
+            } else {
+                total -= optionsValue;
+            }
+
         }
         return total;
     }

@@ -13,6 +13,8 @@ public interface ClientEjbInterface extends CrudInterface<Client> {
             int amount, TransactionType type);
     void sellStockOptions(Client client, Company company,
             int amount, TransactionType type);
+    void speculateStockOptions(Client client, Company company,
+            int amount, TransactionType type);
     void cancelPrivilegedTransaction(Client client, Transaction transaction);
     
     void closeAccount(Client client);

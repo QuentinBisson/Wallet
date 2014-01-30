@@ -58,6 +58,11 @@ public class UserBean implements Serializable {
         clientEjb.update(user);
     }
 
+    public void buyTransactionListener(long transactionId) {
+        Transaction t = transactionEjb.findById(transactionId);
+        
+    }
+    
     public void cancelTransactionListener(long transactionId) {
         Transaction t = transactionEjb.findById(transactionId);
         clientEjb.cancelPrivilegedTransaction(user, t);

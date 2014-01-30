@@ -74,7 +74,7 @@
                     </p:column>
                     <p:column styleClass="actions">
                         <h:form>
-                            <h:outputLink value="#{homeBean.buyAction}">
+                            <h:outputLink value="#{homeBean.buyAction}" rendered="#{transaction.operationType == 'PURCHASE'}">
                                 <f:param name="id" value="#{transaction.company.id}" />
                                 <f:param name="sell" value="true" />
                                 <f:param name="buy" value="false" />
@@ -124,6 +124,12 @@
                                     <h:outputText styleClass="loss" value="#{transaction.total}" /> 
                                 </c:otherwise>
                             </c:choose>
+                        </p:column>
+                        <p:column styleClass="actions">
+                            <h:form>
+                                <p:commandButton value="Acheter" 
+                                                 actionListener="#{userBean.buyTransactionListener(transaction.transactionId)}" rendered="#{transaction.operationType == 'SALE'}"/>
+                            </h:form>
                         </p:column>
                         <p:column styleClass="actions">
                             <h:form>

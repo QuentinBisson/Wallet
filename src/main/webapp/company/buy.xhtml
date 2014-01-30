@@ -17,19 +17,22 @@
 
         <h:body style="background: none repeat scroll 0 0 #F1F1F1">
             <ui:include src="/WEB-INF/header.xhtml" />
+            <br/>
             <h:form>
 
                 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
-                <p:panel header="Achat d'option">
+                <p:panel header="Achat/Vente d'option">
                     <p:panelGrid columns="2">
                         <h:outputLabel value="Company :"/>
                         <h:outputText value="#{buyBean.company.name}"/>
-                        
+
                         <h:outputLabel value="Valeur :"/>
                         <h:outputText value="#{buyBean.company.lastSale}"/>
 
-                        <h:outputLabel value="Quantité :"/>
-                        <p:inputText value="#{buyBean.numberOfActions}"/>                       
+                        <h:outputLabel value="Quantité :"/>                     
+                        <p:spinner  value="#{buyBean.numberOfActions}" min="0"  rendered="#{buyBean.buy}"/> 
+                        <p:spinner  value="#{buyBean.numberOfActions}" min="0" rendered="#{buyBean.speculate}"/> 
+                        <p:spinner  value="#{buyBean.numberOfActions}" min="0" rendered="#{buyBean.sell}"/> 
 
                         <p:commandButton value="Acheter" actionListener="#{buyBean.buyAction}" update="messages" rendered="#{buyBean.buy}">
                             <f:param value="#{buyBean.company.id}" name="id"/>
@@ -37,14 +40,14 @@
                             <f:param name="buy" value="#{buyBean.buy}" />
                             <f:param name="speculate" value="#{buyBean.speculate}" />
                         </p:commandButton>
-                        
+
                         <p:commandButton value="Vendre" actionListener="#{buyBean.sellAction}" update="messages" rendered="#{buyBean.sell}">
                             <f:param value="#{buyBean.company.id}" name="id"/>
                             <f:param name="sell" value="#{buyBean.sell}" />
                             <f:param name="buy" value="#{buyBean.buy}" />
                             <f:param name="speculate" value="#{buyBean.speculate}" />
                         </p:commandButton>
-                        
+
                         <p:commandButton value="Speculer" actionListener="#{buyBean.speculateAction}" update="messages" rendered="#{buyBean.speculate}">
                             <f:param value="#{buyBean.company.id}" name="id"/>
                             <f:param name="sell" value="#{buyBean.sell}" />

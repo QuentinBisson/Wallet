@@ -28,7 +28,9 @@
                     <h:outputLabel value="#{transaction.operationType}"/>
                 </p:column>
                 <p:column headerText="Prix">
-                    <h:outputLabel value="#{transaction.price}"/>
+                    <h:outputLabel value="#{transaction.price}">
+                        <f:convertNumber maxFractionDigits="2" type="currency" currencySymbol="$"/>
+                    </h:outputLabel>
                 </p:column>
                 <p:column headerText="Quantité">
                     <h:outputLabel value="#{fn:length(transaction.stockOptions)}"/>
@@ -37,7 +39,9 @@
                     <h:outputLabel value="#{transaction.stockOptions.get(0).company.name}"/>
                 </p:column>
                 <p:column headerText="Prix total">
-                    <h:outputLabel value="#{fn:length(transaction.stockOptions) * transaction.price}"/>
+                    <h:outputLabel value="#{fn:length(transaction.stockOptions) * transaction.price}">
+                        <f:convertNumber maxFractionDigits="2" type="currency" currencySymbol="$"/>
+                    </h:outputLabel>
                 </p:column>
             </p:dataTable>
             <ui:include src="/WEB-INF/footer.xhtml" />

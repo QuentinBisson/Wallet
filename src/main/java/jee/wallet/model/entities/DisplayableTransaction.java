@@ -13,17 +13,19 @@ public class DisplayableTransaction implements Serializable {
     private double total;
     private TransactionType type;
     private long transactionId;
+    private OperationType operationType;
 
     public DisplayableTransaction() {
     }
     
     public DisplayableTransaction(long id, Company company, long actions,
-            double value, TransactionType type) {
+            double value, TransactionType type, OperationType op) {
         transactionId = id;
         this.company = company;
         this.actions = actions;
         total = actions * value;
         this.type = type;
+        this.operationType = op;
     }
 
     public Company getCompany() {
@@ -64,6 +66,10 @@ public class DisplayableTransaction implements Serializable {
     
     public long getTransactionId() {
         return transactionId;
+    }
+
+    public OperationType getOperationType() {
+        return operationType;
     }
     
 }

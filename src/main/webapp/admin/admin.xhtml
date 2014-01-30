@@ -76,7 +76,9 @@
                     </p:column> 
 
                     <p:column headerText="Solde du compte" style="width:3%">  
-                        <h:outputText value="#{client.wallet.balance}$" />  
+                        <h:outputText value="#{client.wallet.balance}" >
+                            <f:convertNumber maxFractionDigits="2" type="currency" currencySymbol="$"/>
+                        </h:outputText>
                     </p:column> 
 
                     <p:column style="width:3%">  

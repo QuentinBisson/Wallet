@@ -80,7 +80,7 @@ public class BuyBean {
     public void speculateAction() {
         FacesMessage msg = null;
         try {
-            clientEjb.sellStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);
+            clientEjb.speculateStockOptions(client, company, numberOfActions, TransactionType.PRIVILEGED);
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Vous avez spéculé "
                     + numberOfActions
                     + " actions de l'entreprise "
