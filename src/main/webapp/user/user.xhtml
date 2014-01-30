@@ -138,13 +138,15 @@
                         <p:column styleClass="actions">
                             <h:form>
                                 <p:commandButton value="Acheter" 
-                                                 actionListener="#{userBean.buyTransactionListener(transaction.transactionId)}" rendered="#{transaction.operationType == 'SALE'}"/>
+                                                 actionListener="#{userBean.buyTransactionListener(transaction.transactionId)}" 
+                                                 rendered="#{transaction.operationType == 'SALE'}"/>
                             </h:form>
                         </p:column>
                         <p:column styleClass="actions">
                             <h:form>
                                 <p:commandButton value="Annuler la transaction" 
-                                                 actionListener="#{userBean.cancelTransactionListener(transaction.transactionId)}" />
+                                                 actionListener="#{userBean.cancelTransactionListener(transaction.transactionId)}" 
+                                                 rendered="#{transaction.operationType == 'SALE'}"/>
                             </h:form>
                         </p:column>
 
@@ -162,6 +164,3 @@
 
     </f:view>
 </html>
-
-
-

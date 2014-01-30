@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import jee.wallet.model.ejb.ClientEjb;
@@ -66,6 +67,8 @@ public class UserBean implements Serializable {
     public void cancelTransactionListener(long transactionId) {
         Transaction t = transactionEjb.findById(transactionId);
         clientEjb.cancelPrivilegedTransaction(user, t);
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Transaction annulé", "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void closeAccount() {
@@ -90,6 +93,8 @@ public class UserBean implements Serializable {
                 t.getStockOptions().get(0).getCompany(),
                 t.getStockOptions().size(),
                 t.getTransactionType());
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Action spéculé acheté", "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public double getBalance() {
